@@ -24,8 +24,7 @@ class VistaIdentificacionWidget extends StatefulWidget {
       _VistaIdentificacionWidgetState();
 }
 
-class _VistaIdentificacionWidgetState
-    extends State<VistaIdentificacionWidget> {
+class _VistaIdentificacionWidgetState extends State<VistaIdentificacionWidget> {
   late FocusNode _focusNode;
 
   @override
@@ -51,7 +50,7 @@ class _VistaIdentificacionWidgetState
         }
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFF192B71),
+        backgroundColor: const Color(0xFF222e7a),
         appBar: AppBar(
           backgroundColor: const Color(0xFF112659),
           automaticallyImplyLeading: false,
@@ -79,7 +78,7 @@ class _VistaIdentificacionWidgetState
             alignment: AlignmentDirectional(-1, -1),
             child: SingleChildScrollView(
               child: Container(
-                color: const Color(0xFF192B71),
+                color: const Color(0x222e7a),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -87,12 +86,23 @@ class _VistaIdentificacionWidgetState
                       borderRadius: BorderRadius.circular(8),
                       child: Image.asset(
                         'assets/images/asd.png',
-                        width: 400.25,
-                        height: 358,
+                        
                         fit: BoxFit.cover,
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    
+                    Container(
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Valide su información para acceder al token',
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 228, 226, 226),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(16),
                       child: Column(
@@ -104,35 +114,43 @@ class _VistaIdentificacionWidgetState
                               focusNode: _focusNode,
                               autofocus: true,
                               decoration: InputDecoration(
-                                labelText: 'Email',
-                                hintText: 'Ingrese su email',
+                                labelText: 'Ingrese su identificación',
+                                hintText: 'Cédula / RUC / Pasaporte',
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(
+                                      color: Colors.white), // Color del borde
                                 ),
+                                enabledBorder: OutlineInputBorder(
+                                  // Borde cuando el campo no está enfocado
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(
+                                      color: Color.fromARGB(255, 170, 170,
+                                          170)), // Color del borde
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  // Borde cuando el campo está enfocado
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(
+                                      color: Colors.white), // Color del borde
+                                ),
+                                labelStyle: const TextStyle(
+                                    color: Colors
+                                        .white), // Color del texto de la etiqueta
+                                hintStyle: const TextStyle(
+                                    color: Color.fromARGB(255, 255, 255,
+                                        255)), // Color del texto de sugerencia
                                 contentPadding: const EdgeInsets.all(24),
                               ),
                               keyboardType: TextInputType.emailAddress,
                             ),
                           ),
                           const SizedBox(height: 16),
-                          ElevatedButton(
-                            onPressed: () {
-                              print('Sign In button pressed...');
-                            },
-                            child: const Text('Sign Inasdasd'),
-                            style: ElevatedButton.styleFrom(
-                              
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
                           TextButton(
                             onPressed: () {
-                              print('Forgot Password button pressed...');
+                              print('Ingrese su identificación');
                             },
-                            child: const Text('Forgot Password'),
+                            child: const Text('Ingrese su identificación'),
                             style: TextButton.styleFrom(
                               
                               backgroundColor: Colors.grey[300],
