@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() => runApp(const MyApp());
 
@@ -78,6 +79,8 @@ class _VistaIdentificacionWidgetState extends State<VistaIdentificacionWidget> {
             alignment: const AlignmentDirectional(-1, -1),
             child: SingleChildScrollView(
               child: Container(
+                //width: double.infinity,
+                //height: 300,
                 color: const Color(0x00222e7a),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -104,9 +107,10 @@ class _VistaIdentificacionWidgetState extends State<VistaIdentificacionWidget> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(16),
                       child: FractionallySizedBox(
-                        widthFactor: 0.75, // 80% del ancho de la pantalla
+                        
+                        //widthFactor: 0.75, // 80% del ancho de la pantalla
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           mainAxisSize: MainAxisSize.max,
