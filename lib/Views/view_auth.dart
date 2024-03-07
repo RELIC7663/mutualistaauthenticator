@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mutualistaauthenticator/Views/view_cod_ver.dart';
+//import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() => runApp(const MyApp());
 
@@ -79,7 +80,7 @@ class _VistaIdentificacionWidgetState extends State<VistaIdentificacionWidget> {
             alignment: const AlignmentDirectional(-1, -1),
             child: SingleChildScrollView(
               child: Container(
-                //width: double.infinity,
+                width: double.infinity,
                 //height: 300,
                 color: const Color(0x00222e7a),
                 child: Column(
@@ -109,7 +110,6 @@ class _VistaIdentificacionWidgetState extends State<VistaIdentificacionWidget> {
                     Padding(
                       padding: const EdgeInsets.all(16),
                       child: FractionallySizedBox(
-                        
                         //widthFactor: 0.75, // 80% del ancho de la pantalla
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -117,7 +117,7 @@ class _VistaIdentificacionWidgetState extends State<VistaIdentificacionWidget> {
                           children: [
                             TextFormField(
                               focusNode: _focusNode,
-                              autofocus: true,
+                              //autofocus: true,
                               decoration: InputDecoration(
                                 labelText: 'Ingrese su identificación',
                                 hintText: 'Cédula / RUC / Pasaporte',
@@ -149,12 +149,42 @@ class _VistaIdentificacionWidgetState extends State<VistaIdentificacionWidget> {
                                 ), // Color del texto de sugerencia
                                 contentPadding: const EdgeInsets.all(24),
                               ),
-                              keyboardType: TextInputType.emailAddress,
+                              keyboardType: TextInputType
+                                  .number, // Cambia TextInputType.emailAddress a TextInputType.number
+                              style: TextStyle(color: Colors.white),
                             ),
                             const SizedBox(height: 16),
                             TextButton(
                               onPressed: () {
-                                print('Ingrese su identificación');
+                                // Mostrar alerta al presionar el botón
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text('CORRECTO'),
+                                      content: const Text(
+                                        'Mutualista Imbabura ha enviado un código de verificación a 09******06, si no recibe ningún código por favor actualice su información en una de nuestras oficinas',
+                                      ),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () {
+                                            // Cerrar la alerta
+                                            Navigator.of(context).pop();
+
+                                            // Navegar a otra vista
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      Vista_cod_ver()),
+                                            );
+                                          },
+                                          child: const Text('OK'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
                               },
                               style: TextButton.styleFrom(
                                 backgroundColor: Colors.grey[300],

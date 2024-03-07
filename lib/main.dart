@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Mutualista Imabura',
-      initialRoute: '/cod_ver',
+      initialRoute: '/',
       routes: {
         '/': (context) => const VistaIdentificacionWidget(),
         '/generarOTP': (context) => const VistaOTPWidget(),
