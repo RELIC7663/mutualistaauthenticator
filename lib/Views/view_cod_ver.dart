@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mutualistaauthenticator/Views/view_otp.dart';
 
 void main() => runApp(const MyApp());
 
@@ -101,7 +102,7 @@ class _Vista_cod_verState extends State<Vista_cod_ver>
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           TextFormField(
-                            //focusNode: _focusNode,
+                            focusNode: _focusNode,
                             autofocus: true,
                             decoration: InputDecoration(
                               labelText: 'Ingrese el codigo de Verificacion',
@@ -134,12 +135,40 @@ class _Vista_cod_verState extends State<Vista_cod_ver>
                               ), // Color del texto de sugerencia
                               contentPadding: const EdgeInsets.all(24),
                             ),
-                            keyboardType: TextInputType.emailAddress,
+                            keyboardType: TextInputType.number,
                           ),
                           const SizedBox(height: 16),
                           TextButton(
                             onPressed: () {
-                              print('Ingrese el Codigo de Verficacion');
+                              // Mostrar alerta al presionar el botón
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Felicidades'),
+                                    content: const Text(
+                                      'Su aplicación se ha registrada correctamente.',
+                                    ),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () {
+                                          // Cerrar la alerta
+                                          Navigator.of(context).pop();
+
+                                          // Navegar a otra vista
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    VistaOTPWidget()),
+                                          );
+                                        },
+                                        child: const Text('Aceptar'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
                             },
                             style: TextButton.styleFrom(
                               backgroundColor: Colors.grey[300],
