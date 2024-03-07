@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mutualistaauthenticator/Views/view_auth.dart';
 import 'package:mutualistaauthenticator/Views/view_otp.dart';
+import 'package:mutualistaauthenticator/Views/view_cod_ver.dart';
 
 void main() => runApp(const MyApp());
 
@@ -11,11 +12,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Mutualista Imabura',
-      initialRoute: '/',
+      initialRoute: '/cod_ver',
       routes: {
-        '/': (context) => VistaIdentificacionWidget(),
-        '/generarOTP': (context) =>
-            VistaOTPWidget(), // Nueva ruta para la vista de generación de OTP
+        '/': (context) => const VistaIdentificacionWidget(),
+        '/generarOTP': (context) => const VistaOTPWidget(),
+        '/cod_ver': (context) => const Vista_cod_ver(),
       },
     );
   }

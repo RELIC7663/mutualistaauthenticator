@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class VistaOTPWidget extends StatefulWidget {
+  const VistaOTPWidget({Key? key}) : super(key: key);
+
   @override
   _VistaOTPWidgetState createState() => _VistaOTPWidgetState();
 }
@@ -14,7 +16,8 @@ class _VistaOTPWidgetState extends State<VistaOTPWidget>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 30), // Duración de la animación (30 segundos)
+      duration:
+          const Duration(seconds: 30), // Duración de la animación (30 segundos)
     );
     _controller.repeat(); // Iniciar la animación
   }
@@ -66,7 +69,7 @@ class _VistaOTPWidgetState extends State<VistaOTPWidget>
                       child: CircularProgressIndicator(
                         value: _controller.value,
                         strokeWidth: 10, // Grosor del indicador circular
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors
+                        valueColor: const AlwaysStoppedAnimation<Color>(Colors
                             .white), // Color del trazo del indicador circular
                       ),
                     ),
@@ -74,7 +77,7 @@ class _VistaOTPWidgetState extends State<VistaOTPWidget>
                       _controller.isAnimating
                           ? "${((_controller.value) * 30).toInt()}"
                           : 'OTP generado',
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 24, color: Colors.white), // Color del texto
                     ),
                   ],
