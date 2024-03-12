@@ -11,21 +11,22 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       title: 'Mutualista Imabura',
       home: Scaffold(
-        body: VistaIdentificacionWidget(),
+        body: VistaIdentificacionWidget1(),
       ),
     );
   }
 }
 
-class VistaIdentificacionWidget extends StatefulWidget {
-  const VistaIdentificacionWidget({Key? key}) : super(key: key);
+class VistaIdentificacionWidget1 extends StatefulWidget {
+  const VistaIdentificacionWidget1({Key? key}) : super(key: key);
 
   @override
-  _VistaIdentificacionWidgetState createState() =>
-      _VistaIdentificacionWidgetState();
+  _VistaIdentificacionWidget1State createState() =>
+      _VistaIdentificacionWidget1State();
 }
 
-class _VistaIdentificacionWidgetState extends State<VistaIdentificacionWidget> {
+class _VistaIdentificacionWidget1State
+    extends State<VistaIdentificacionWidget1> {
   late TextEditingController _pinController;
 
   @override

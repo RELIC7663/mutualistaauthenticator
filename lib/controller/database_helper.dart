@@ -20,9 +20,12 @@ class DatabaseHelper {
     return _databaseHelper!;
   }
 
+  bool _isDatabaseInitialized = false;
+
   Future<Database> get database async {
-    if (_database == null) {
+    if (_database == null || !_isDatabaseInitialized) {
       _database = await initializeDatabase();
+      _isDatabaseInitialized = true;
     }
     return _database!;
   }
