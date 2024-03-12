@@ -63,16 +63,34 @@ class CreatePinView extends StatelessWidget {
                     decoration: InputDecoration(
                       labelText: 'Contraseña',
                       border: OutlineInputBorder(),
+                      // Aquí puedes personalizar el estilo del texto de la etiqueta y el borde
+                      labelStyle: TextStyle(color: Colors.white),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
                     ),
                     obscureText: true, // Oculta la contraseña
+                    style: TextStyle(color: Colors.white), // Estilo del texto
                   ),
                   SizedBox(height: 16),
                   TextField(
                     decoration: InputDecoration(
                       labelText: 'Confirmar Contraseña',
                       border: OutlineInputBorder(),
+                      // Aquí puedes personalizar el estilo del texto de la etiqueta y el borde
+                      labelStyle: TextStyle(color: Colors.white),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
                     ),
                     obscureText: true, // Oculta la contraseña
+                    style: TextStyle(color: Colors.white), // Estilo del texto
                   ),
                   SizedBox(height: 32),
                   ElevatedButton(
