@@ -106,7 +106,7 @@ class _Vista_cod_verState extends State<Vista_cod_ver>
                             autofocus: true,
                             decoration: InputDecoration(
                               labelText: 'Ingrese el codigo de Verificacion',
-                              hintText: 'Verifique su didentidad',
+                              hintText: 'Verifique su identidad',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: const BorderSide(
@@ -136,6 +136,9 @@ class _Vista_cod_verState extends State<Vista_cod_ver>
                               contentPadding: const EdgeInsets.all(24),
                             ),
                             keyboardType: TextInputType.number,
+                            style: TextStyle(
+                                color: Colors
+                                    .white), // Cambia el color del texto dentro del campo
                           ),
                           const SizedBox(height: 16),
                           TextButton(

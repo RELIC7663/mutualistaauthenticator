@@ -202,7 +202,7 @@ class _VistaOTPWidgetState extends State<VistaOTPWidget>
                       ),
                     ),
                     Text(
-                      _controller.isAnimating ? "162510" : 'OTP generado',
+                      _controller.isAnimating ? "102560" : 'OTP generado',
                       style: const TextStyle(
                         fontSize: 24,
                         color: Colors.white,
