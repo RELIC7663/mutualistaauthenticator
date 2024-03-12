@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mutualistaauthenticator/Views/view_login_pin.dart';
 
 class CreatePinView extends StatelessWidget {
   const CreatePinView({Key? key}) : super(key: key);
@@ -97,6 +98,12 @@ class CreatePinView extends StatelessWidget {
                     onPressed: () {
                       // Acción para confirmar la creación del PIN
                       // Esto puede incluir validación de contraseñas y navegación a la siguiente vista
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => VistaIdentificacionWidget(),
+                        ),
+                      );
                     },
                     child: Text('Confirmar'),
                   ),
