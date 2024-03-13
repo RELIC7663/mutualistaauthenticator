@@ -35,7 +35,7 @@ class _VistaIdentificacionWidgetState extends State<VistaIdentificacionWidget> {
   void initState() {
     super.initState();
     _focusNode = FocusNode();
-    TextEditingController _textEditingController = TextEditingController();
+    //TextEditingController _textEditingController = TextEditingController();
   }
 
   @override
