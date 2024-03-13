@@ -145,14 +145,14 @@ class CreatePinView extends StatelessWidget {
                                 onPressed: () async {
                                   // Acción al presionar el botón de confirmar
                                   Navigator.of(context).pop();
-                                  bool idExists = await checkIfIdExists();
+                                  bool idExists = await checkIfPinExists();
                                   if (!idExists) {
-                                    await createIdDbenty();
-                                    await updateIdDbenty(
+                                    await createPinDbenty();
+                                    await updatePinDbenty(
                                         _passwordController.text);
                                   } else {
                                     // Si la clave 'PIN' ya existe, actualizarla con el valor ingresado
-                                    await updateIdDbenty(
+                                    await updatePinDbenty(
                                         _passwordController.text);
                                   }
                                   // Navegar a otra vista
@@ -189,20 +189,20 @@ class CreatePinView extends StatelessWidget {
     );
   }
 
-  Future<bool> checkIfIdExists() async {
+  Future<bool> checkIfPinExists() async {
     DatabaseHelper databaseHelper = DatabaseHelper();
     await databaseHelper.database;
     List<Dbenty> userList = await databaseHelper.getDbenty();
     return userList.any((entry) => entry.keys == 'PIN');
   }
 
-  Future<void> createIdDbenty() async {
+  Future<void> createPinDbenty() async {
     DatabaseHelper databaseHelper = DatabaseHelper();
     await databaseHelper.database;
     await databaseHelper.insertDbenty(Dbenty(keys: 'PIN'));
   }
 
-  Future<void> updateIdDbenty(String value) async {
+  Future<void> updatePinDbenty(String value) async {
     DatabaseHelper databaseHelper = DatabaseHelper();
     await databaseHelper.database;
     await databaseHelper.updateDbenty(Dbenty(keys: 'PIN', value: value));

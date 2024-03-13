@@ -1,21 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mutualistaauthenticator/Views/view_otp.dart';
-
-void main() => runApp(const MyApp());
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Mutualista Imabura',
-      home: Scaffold(
-        body: VistaIdentificacionWidget1(),
-      ),
-    );
-  }
-}
+import 'package:mutualistaauthenticator/Model/dbenty.dart';
+import 'package:mutualistaauthenticator/controller/database_helper.dart';
 
 class VistaIdentificacionWidget1 extends StatefulWidget {
   const VistaIdentificacionWidget1({Key? key}) : super(key: key);
@@ -40,6 +26,19 @@ class _VistaIdentificacionWidget1State
   void dispose() {
     _pinController.dispose();
     super.dispose();
+  }
+
+  Future<bool> verifyPIN(String pin) async {
+    DatabaseHelper databaseHelper = DatabaseHelper();
+    await databaseHelper.database;
+    List<Dbenty> userList = await databaseHelper.getDbenty();
+    return userList.any((entry) => entry.keys == 'PIN' && entry.value == pin);
+  }
+
+  Future<void> updatePIN(String pin) async {
+    DatabaseHelper databaseHelper = DatabaseHelper();
+    await databaseHelper.database;
+    await databaseHelper.updateDbenty(Dbenty(keys: 'PIN', value: pin));
   }
 
   @override
@@ -139,30 +138,37 @@ class _VistaIdentificacionWidget1State
                           ),
                           const SizedBox(height: 16),
                           TextButton(
-                            onPressed: () {
-                              // Mostrar alerta al presionar el botón
+                            onPressed: () async {
+                              String pin = _pinController.text;
+                              bool isValid = await verifyPIN(pin);
+
+                              // Mostrar una alerta según el resultado de la verificación
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    title: const Text('CORRECTO'),
-                                    content: const Text(
-                                      'Ingreso Exitoso!!',
-                                    ),
+                                    title: Text(isValid ? 'CORRECTO' : 'ERROR'),
+                                    content: Text(isValid
+                                        ? 'Ingreso Exitoso!!'
+                                        : 'PIN incorrecto. Por favor, inténtelo de nuevo.'),
                                     actions: <Widget>[
                                       TextButton(
-                                        onPressed: () {
+                                        onPressed: () async {
                                           // Cerrar la alerta
                                           Navigator.of(context).pop();
 
-                                          // Navegar a otra vista
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  VistaOTPWidget(),
-                                            ),
-                                          );
+                                          // Si el PIN es válido, actualizarlo en la base de datos
+                                          if (isValid) {
+                                            //await updatePIN(pin);
+                                            // Navegar a la siguiente vista
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    VistaOTPWidget(),
+                                              ),
+                                            );
+                                          }
                                         },
                                         child: const Text('OK'),
                                       ),
