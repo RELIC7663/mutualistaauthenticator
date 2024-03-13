@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mutualistaauthenticator/Views/view_auth.dart';
 import 'package:mutualistaauthenticator/Views/view_conf_pin.dart';
 import 'package:mutualistaauthenticator/Views/view_info.dart';
+import 'package:mutualistaauthenticator/Views/test.dart';
 
 class VistaOTPWidget extends StatefulWidget {
   const VistaOTPWidget({Key? key}) : super(key: key);
@@ -86,7 +87,13 @@ class _VistaOTPWidgetState extends State<VistaOTPWidget>
                 ),
                 onTap: () {
                   // Implementa la acción para la opción "Inicio"
-                  Navigator.of(context).pop();
+                  //Navigator.of(context).pop();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TestPage(),
+                    ),
+                  );
                 },
               ),
               ListTile(

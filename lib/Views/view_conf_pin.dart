@@ -101,7 +101,7 @@ class CreatePinView extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => VistaIdentificacionWidget(),
+                          builder: (context) => VistaIdentificacionWidget1(),
                         ),
                       );
                     },

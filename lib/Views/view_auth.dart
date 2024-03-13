@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mutualistaauthenticator/Views/view_cod_ver.dart';
+import 'package:mutualistaauthenticator/controller/database_helper.dart';
+import 'package:mutualistaauthenticator/Model/dbenty.dart';
 //import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() => runApp(const MyApp());
@@ -155,36 +157,46 @@ class _VistaIdentificacionWidgetState extends State<VistaIdentificacionWidget> {
                             ),
                             const SizedBox(height: 16),
                             TextButton(
-                              onPressed: () {
-                                // Mostrar alerta al presionar el botón
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text('CORRECTO'),
-                                      content: const Text(
-                                        'Mutualista Imbabura ha enviado un código de verificación a 09******06, si no recibe ningún código por favor actualice su información en una de nuestras oficinas',
-                                      ),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () {
-                                            // Cerrar la alerta
-                                            Navigator.of(context).pop();
+                              onPressed: () async {
+                                // Verificar si existe un Dbenty con la clave "ID"
+                                bool idExists = await checkIfIdExists();
 
-                                            // Navegar a otra vista
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      Vista_cod_ver()),
-                                            );
-                                          },
-                                          child: const Text('OK'),
+                                if (idExists) {
+                                  // Mostrar un diálogo de éxito
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text('CORRECTO'),
+                                        content: const Text(
+                                          'Mutualista Imbabura ha enviado un código de verificación a 09******06, si no recibe ningún código por favor actualice su información en una de nuestras oficinas',
                                         ),
-                                      ],
-                                    );
-                                  },
-                                );
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () {
+                                              // Cerrar la alerta
+                                              Navigator.of(context).pop();
+
+                                              // Navegar a otra vista
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Vista_cod_ver()),
+                                              );
+                                            },
+                                            child: const Text('OK'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                } else {
+                                  // Crear un nuevo Dbenty con la clave "ID"
+                                  await createIdDbenty();
+
+                                  // Aquí puedes agregar cualquier otra lógica necesaria
+                                }
                               },
                               style: TextButton.styleFrom(
                                 backgroundColor: Colors.grey[300],
@@ -206,5 +218,30 @@ class _VistaIdentificacionWidgetState extends State<VistaIdentificacionWidget> {
         ),
       ),
     );
+  }
+
+  Future<bool> checkIfIdExists() async {
+    // Instancia tu helper de base de datos
+    DatabaseHelper databaseHelper = DatabaseHelper();
+
+    // Espera a que se abra la base de datos
+    await databaseHelper.database;
+
+    // Obtén la lista de entradas de la base de datos
+    List<Dbenty> userList = await databaseHelper.getDbenty();
+
+    // Verifica si existe un Dbenty con la clave "ID"
+    return userList.any((entry) => entry.keys == 'ID');
+  }
+
+  Future<void> createIdDbenty() async {
+    // Instancia tu helper de base de datos
+    DatabaseHelper databaseHelper = DatabaseHelper();
+
+    // Espera a que se abra la base de datos
+    await databaseHelper.database;
+
+    // Crea un nuevo Dbenty con la clave "ID"
+    await databaseHelper.insertDbenty(Dbenty(keys: 'ID'));
   }
 }
