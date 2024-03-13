@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:mutualistaauthenticator/Model/user.dart';
+import 'package:mutualistaauthenticator/Model/dbenty.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -7,9 +7,9 @@ class DatabaseHelper {
   static DatabaseHelper? _databaseHelper;
   static Database? _database;
 
-  String userTable = 'user';
-  String colId = 'id';
-  String colPin = 'pin';
+  String userTable = 'dbenty';
+  String colKeys = 'keys';
+  String colValue = 'value';
 
   DatabaseHelper._createInstance();
 
@@ -31,42 +31,42 @@ class DatabaseHelper {
   }
 
   Future<Database> initializeDatabase() async {
-    String path = join(await getDatabasesPath(), 'user.db');
-    var userDatabase =
+    String path = join(await getDatabasesPath(), 'dbenty.db');
+    var dbentyDatabase =
         await openDatabase(path, version: 1, onCreate: _createDb);
 
-    return userDatabase;
+    return dbentyDatabase;
   }
 
   void _createDb(Database db, int newVersion) async {
     await db.execute(
-        'CREATE TABLE $userTable($colId TEXT PRIMARY KEY, $colPin TEXT DEFAULT "0")');
+        'CREATE TABLE $userTable($colKeys TEXT PRIMARY KEY, $colValue TEXT DEFAULT "0")');
   }
 
-  Future<int> insertUser(User user) async {
+  Future<int> insertDbenty(Dbenty user) async {
     Database db = await this.database;
     var result = await db.insert(userTable, user.toMap());
     return result;
   }
 
-  Future<List<User>> getUsers() async {
+  Future<List<Dbenty>> getDbenty() async {
     Database db = await this.database;
     var result = await db.query(userTable);
-    List<User> userList = result.map((item) => User.fromMap(item)).toList();
+    List<Dbenty> userList = result.map((item) => Dbenty.fromMap(item)).toList();
     return userList;
   }
 
-  Future<int> updateUserPin(User user) async {
+  Future<int> updateDbenty(Dbenty user) async {
     var db = await this.database;
     var result = await db.update(userTable, user.toMap(),
-        where: '$colId = ?', whereArgs: [user.id]);
+        where: '$colKeys = ?', whereArgs: [user.keys]);
     return result;
   }
 
-  Future<int> deleteUser(String id) async {
+  Future<int> deleteEnty(String id) async {
     var db = await this.database;
     int result =
-        await db.delete(userTable, where: '$colId = ?', whereArgs: [id]);
+        await db.delete(userTable, where: '$colKeys = ?', whereArgs: [id]);
     return result;
   }
 }

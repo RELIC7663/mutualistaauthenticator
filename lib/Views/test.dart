@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mutualistaauthenticator/Model/user.dart';
+import 'package:mutualistaauthenticator/Model/dbenty.dart';
 import 'package:mutualistaauthenticator/controller/database_helper.dart';
 
 class TestPage extends StatefulWidget {
@@ -11,17 +11,17 @@ class TestPage extends StatefulWidget {
 
 class _TestPageState extends State<TestPage> {
   late DatabaseHelper _databaseHelper;
-  List<User> _userList = [];
+  List<Dbenty> _dbentyList = [];
 
   @override
   void initState() {
     super.initState();
     _databaseHelper = DatabaseHelper();
-    _getUserList();
+    _getDbentyList();
   }
 
-  Future<void> _getUserList() async {
-    _userList = await _databaseHelper.getUsers();
+  Future<void> _getDbentyList() async {
+    _dbentyList = await _databaseHelper.getDbenty();
     setState(() {}); // Actualiza la interfaz gráfica
   }
 
@@ -35,33 +35,33 @@ class _TestPageState extends State<TestPage> {
         child: DataTable(
           columns: const <DataColumn>[
             DataColumn(
-              label: Text('ID'),
+              label: Text('Keys'),
             ),
             DataColumn(
-              label: Text('PIN'),
+              label: Text('Value'),
             ),
             DataColumn(
-              label: Text('Acciones'),
+              label: Text('Crud'),
             ),
           ],
-          rows: _userList.map<DataRow>((User user) {
+          rows: _dbentyList.map<DataRow>((Dbenty db) {
             return DataRow(
               cells: <DataCell>[
-                DataCell(Text(user.id)),
-                DataCell(Text(user.pin)),
+                DataCell(Text(db.keys)),
+                DataCell(Text(db.value)),
                 DataCell(
                   Row(
                     children: [
                       IconButton(
                         icon: Icon(Icons.edit),
                         onPressed: () {
-                          _editUser(user);
+                          _editUser(db);
                         },
                       ),
                       IconButton(
                         icon: Icon(Icons.delete),
                         onPressed: () {
-                          _deleteUser(user.id);
+                          _deleteUser(db.keys);
                         },
                       ),
                     ],
@@ -113,10 +113,10 @@ class _TestPageState extends State<TestPage> {
             ),
             TextButton(
               onPressed: () async {
-                User newUser =
-                    User(id: idController.text, pin: pinController.text);
-                await _databaseHelper.insertUser(newUser);
-                _getUserList();
+                Dbenty newUser =
+                    Dbenty(keys: idController.text, value: pinController.text);
+                await _databaseHelper.insertDbenty(newUser);
+                _getDbentyList();
                 Navigator.of(context).pop(); // Cerrar el diálogo
               },
               child: Text('Agregar'),
@@ -127,9 +127,10 @@ class _TestPageState extends State<TestPage> {
     );
   }
 
-  Future<void> _editUser(User user) async {
+  Future<void> _editUser(Dbenty user) async {
     // Mostrar un diálogo para editar un usuario existente
-    TextEditingController pinController = TextEditingController(text: user.pin);
+    TextEditingController pinController =
+        TextEditingController(text: user.value);
 
     await showDialog(
       context: context,
@@ -140,7 +141,7 @@ class _TestPageState extends State<TestPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('ID: ${user.id}'),
+                Text('ID: ${user.keys}'),
                 TextField(
                   controller: pinController,
                   decoration: InputDecoration(labelText: 'PIN'),
@@ -157,9 +158,10 @@ class _TestPageState extends State<TestPage> {
             ),
             TextButton(
               onPressed: () async {
-                User updatedUser = User(id: user.id, pin: pinController.text);
-                await _databaseHelper.updateUserPin(updatedUser);
-                _getUserList();
+                Dbenty updatedUser =
+                    Dbenty(keys: user.keys, value: pinController.text);
+                await _databaseHelper.updateDbenty(updatedUser);
+                _getDbentyList();
                 Navigator.of(context).pop(); // Cerrar el diálogo
               },
               child: Text('Guardar'),
@@ -197,8 +199,8 @@ class _TestPageState extends State<TestPage> {
     );
 
     if (confirm == true) {
-      await _databaseHelper.deleteUser(userId);
-      _getUserList();
+      await _databaseHelper.deleteEnty(userId);
+      _getDbentyList();
     }
   }
 }

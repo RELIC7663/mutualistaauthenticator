@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mutualistaauthenticator/Model/user.dart';
+import 'package:mutualistaauthenticator/Model/dbenty.dart';
 import 'package:mutualistaauthenticator/Views/view_auth.dart';
 import 'package:mutualistaauthenticator/Views/view_otp.dart';
 import 'package:mutualistaauthenticator/Views/view_cod_ver.dart';
@@ -50,11 +50,18 @@ class MyApp extends StatelessWidget {
     DatabaseHelper databaseHelper = DatabaseHelper();
     await databaseHelper.database;
 
-    List<User> userList = await databaseHelper.getUsers();
+    List<Dbenty> userList = await databaseHelper.getDbenty();
 
-    int pinLength = userList.isNotEmpty ? userList[0].pin.length : 0;
+    // Busca un objeto Dbenty con la clave "Pin" en la lista userList
+    Dbenty pinEntry = userList.firstWhere(
+      (entry) => entry.keys == 'PIN',
+      orElse: () => Dbenty(
+          keys: '',
+          value: ''), // Si no se encuentra, crea un objeto Dbenty vacío
+    );
 
-    if (pinLength > 4) {
+    // Verifica si la longitud del valor del pin es mayor a 4
+    if (pinEntry.value.length > 4) {
       return '/pin';
     } else {
       return '/';
