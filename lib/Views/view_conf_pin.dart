@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:mutualistaauthenticator/Views/view_login_pin.dart';
 import 'package:mutualistaauthenticator/Model/dbenty.dart';
 import 'package:mutualistaauthenticator/controller/database_helper.dart';
+import 'package:pin_code_fields/pin_code_fields.dart'; // Importa el paquete necesario
 
 class CreatePinView extends StatelessWidget {
   CreatePinView({Key? key}) : super(key: key);
 
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
-
+  String _pinCode1 = '';
+  String _pinCode2 = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,7 +55,7 @@ class CreatePinView extends StatelessWidget {
                     width: double.infinity,
                     alignment: Alignment.center,
                     child: const Text(
-                      'Ingrese el pin de inicio de secion',
+                      'Ingrese el pin de inicio de sesión',
                       style: TextStyle(
                         color: Color.fromARGB(255, 228, 226, 226),
                         fontSize: 16,
@@ -65,66 +64,119 @@ class CreatePinView extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(16),
-                  ),
-                  TextField(
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      labelText: 'Contraseña',
-                      border: OutlineInputBorder(),
-                      labelStyle: TextStyle(color: Colors.white),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
+                    padding: const EdgeInsets.all(30),
+                    child: PinCodeTextField(
+                      appContext: context,
+                      length: 6,
+                      onChanged: (value) {
+                        // Manejar el cambio en el PIN ingresado
+                        print(value);
+                      },
+                      textStyle: TextStyle(
+                          color: Colors
+                              .white), // Establece el color del texto a blanco
+                      pinTheme: PinTheme(
+                        fieldHeight: 50,
+                        fieldWidth: 40,
+                        borderWidth: 2,
+                        borderRadius: BorderRadius.circular(12),
+                        shape: PinCodeFieldShape.box,
+                        activeColor: Colors.white,
+                        inactiveColor: Colors.white,
+                        selectedColor: Colors.white,
+                        activeFillColor: Colors.transparent,
+                        inactiveFillColor: Colors.transparent,
+                        selectedFillColor: Colors.transparent,
                       ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
+                      obscureText:
+                          true, // Hace que los caracteres del PIN sean ocultos
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        // Validar que el PIN tenga una longitud de 6 caracteres
+                        if (value!.length != 6) {
+                          return 'El PIN debe tener 6 dígitos';
+                        }
+                        return null; // Retorna null si la validación es exitosa
+                      },
+                      // Almacena el valor ingresado en la variable pinCode1
+                      // para su posterior comparación
+                      onCompleted: (value) {
+                        // Almacenar el PIN completado en la variable pinCode1
+                        _pinCode1 = value;
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Container(
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    child: const Text(
+                      'Confirme el pin de inicio de sesión',
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 228, 226, 226),
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    obscureText: true,
-                    style: TextStyle(color: Colors.white),
                   ),
-                  SizedBox(height: 16),
-                  TextField(
-                    controller: _confirmPasswordController,
-                    decoration: InputDecoration(
-                      labelText: 'Confirmar Contraseña',
-                      border: OutlineInputBorder(),
-                      labelStyle: TextStyle(color: Colors.white),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
+                  SizedBox(height: 15),
+                  Padding(
+                    padding: const EdgeInsets.all(30),
+                    child: PinCodeTextField(
+                      appContext: context,
+                      length: 6,
+                      onChanged: (value) {
+                        // Manejar el cambio en el PIN ingresado
+                        print(value);
+                      },
+                      textStyle: TextStyle(
+                          color: Colors
+                              .white), // Establece el color del texto a blanco
+                      pinTheme: PinTheme(
+                        fieldHeight: 50,
+                        fieldWidth: 40,
+                        borderWidth: 2,
+                        borderRadius: BorderRadius.circular(12),
+                        shape: PinCodeFieldShape.box,
+                        activeColor: Colors.white,
+                        inactiveColor: Colors.white,
+                        selectedColor: Colors.white,
+                        activeFillColor: Colors.transparent,
+                        inactiveFillColor: Colors.transparent,
+                        selectedFillColor: Colors.transparent,
                       ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
+                      obscureText:
+                          true, // Hace que los caracteres del PIN sean ocultos
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        // Validar que el PIN tenga una longitud de 6 caracteres
+                        if (value!.length != 6) {
+                          return 'El PIN debe tener 6 dígitos';
+                        }
+                        return null; // Retorna null si la validación es exitosa
+                      },
+                      // Almacena el valor ingresado en la variable pinCode2
+                      // para su posterior comparación
+                      onCompleted: (value) {
+                        // Almacenar el PIN completado en la variable pinCode2
+                        _pinCode2 = value;
+                      },
                     ),
-                    obscureText: true,
-                    style: TextStyle(color: Colors.white),
                   ),
                   SizedBox(height: 32),
                   ElevatedButton(
                     onPressed: () {
-                      if (_passwordController.text.isEmpty ||
-                          _confirmPasswordController.text.isEmpty) {
-                        // Mostrar un mensaje de error si algún campo está vacío
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Ambos campos son requeridos'),
-                          ),
-                        );
-                        return;
-                      }
-                      if (_passwordController.text !=
-                          _confirmPasswordController.text) {
-                        // Mostrar un mensaje de error si las contraseñas no coinciden
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Las contraseñas no coinciden!!'),
-                          ),
-                        );
-                        return;
-                      }
                       // Acción para confirmar la creación del PIN
                       // Esto puede incluir navegación a la siguiente vista
+                      if (_pinCode1 != _pinCode2) {
+                        // Si los PINs no coinciden, mostrar un mensaje de error
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Los PINs no coinciden'),
+                          ),
+                        );
+                        return;
+                      }
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
@@ -145,15 +197,9 @@ class CreatePinView extends StatelessWidget {
                                 onPressed: () async {
                                   // Acción al presionar el botón de confirmar
                                   Navigator.of(context).pop();
-                                  bool idExists = await checkIfPinExists();
-                                  if (!idExists) {
+                                  bool pinExists = await checkIfPinExists();
+                                  if (!pinExists) {
                                     await createPinDbenty();
-                                    await updatePinDbenty(
-                                        _passwordController.text);
-                                  } else {
-                                    // Si la clave 'PIN' ya existe, actualizarla con el valor ingresado
-                                    await updatePinDbenty(
-                                        _passwordController.text);
                                   }
                                   // Navegar a otra vista
                                   Navigator.push(
@@ -200,11 +246,5 @@ class CreatePinView extends StatelessWidget {
     DatabaseHelper databaseHelper = DatabaseHelper();
     await databaseHelper.database;
     await databaseHelper.insertDbenty(Dbenty(keys: 'PIN'));
-  }
-
-  Future<void> updatePinDbenty(String value) async {
-    DatabaseHelper databaseHelper = DatabaseHelper();
-    await databaseHelper.database;
-    await databaseHelper.updateDbenty(Dbenty(keys: 'PIN', value: value));
   }
 }
