@@ -95,7 +95,7 @@ class _Vista_cod_verState extends State<Vista_cod_ver>
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(30),
                     child: FractionallySizedBox(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
