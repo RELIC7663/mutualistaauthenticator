@@ -201,8 +201,10 @@ class CreatePinView extends StatelessWidget {
                                   if (!pinExists) {
                                     await createPinDbenty();
                                   }
+                                  await updatePIN(_pinCode1);
                                   // Navegar a otra vista
                                   Navigator.push(
+                                    
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
@@ -246,5 +248,10 @@ class CreatePinView extends StatelessWidget {
     DatabaseHelper databaseHelper = DatabaseHelper();
     await databaseHelper.database;
     await databaseHelper.insertDbenty(Dbenty(keys: 'PIN'));
+  }
+    Future<void> updatePIN(String pin) async {
+    DatabaseHelper databaseHelper = DatabaseHelper();
+    await databaseHelper.database;
+    await databaseHelper.updateDbenty(Dbenty(keys: 'PIN', value: pin));
   }
 }

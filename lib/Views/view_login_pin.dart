@@ -159,7 +159,7 @@ class _VistaIdentificacionWidget1State
 
                                           // Si el PIN es válido, actualizarlo en la base de datos
                                           if (isValid) {
-                                            //await updatePIN(pin);
+                                            await updatePIN(pin);
                                             // Navegar a la siguiente vista
                                             Navigator.push(
                                               context,
