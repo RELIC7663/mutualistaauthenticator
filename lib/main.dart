@@ -59,12 +59,21 @@ class MyApp extends StatelessWidget {
           keys: '',
           value: ''), // Si no se encuentra, crea un objeto Dbenty vacío
     );
-
+    Dbenty idEntry = userList.firstWhere(
+      (entry) => entry.keys == 'ID', // Cambia 'ID' por la clave que uses para el ID del usuario
+      orElse: () => Dbenty(keys: '', value: ''), // Si no se encuentra, crea un objeto vacío
+    );
+ 
     // Verifica si la longitud del valor del pin es mayor a 4
-    if (pinEntry.value.length > 4) {
-      return '/pin';
+    if (idEntry.value.length > 9) {
+      // Aquí puedes retornar la ruta que desees, por ejemplo:
+      if (pinEntry.value.length > 4) {
+        return '/pin';
+      } 
+      return '/generarOTP'; // O la ruta que necesites cuando el ID es mayor a 9 caracteres
     } else {
       return '/';
     }
+
   }
 }

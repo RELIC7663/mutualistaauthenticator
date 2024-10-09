@@ -69,4 +69,11 @@ class DatabaseHelper {
         await db.delete(userTable, where: '$colKeys = ?', whereArgs: [id]);
     return result;
   }
+
+  Future<int> deleteAllEntries() async {
+    var db = await this.database;
+    int result = await db.delete(userTable);
+    return result;
+  }
+
 }
