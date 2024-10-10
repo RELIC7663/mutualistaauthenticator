@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mutualistaauthenticator/Views/view_cod_ver.dart';
 import 'package:mutualistaauthenticator/controller/database_helper.dart';
 import 'package:mutualistaauthenticator/Model/dbenty.dart';
+import 'package:mutualistaauthenticator/controller/appController.dart';
+import 'package:mutualistaauthenticator/Views/test.dart';
 //import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() => runApp(const MyApp());
@@ -31,6 +33,9 @@ class VistaIdentificacionWidget extends StatefulWidget {
 class _VistaIdentificacionWidgetState extends State<VistaIdentificacionWidget> {
   late FocusNode _focusNode;
   TextEditingController _textEditingController = TextEditingController();
+
+  final appController _appController = appController();
+  final DatabaseHelper _appdb = DatabaseHelper();
   @override
   void initState() {
     super.initState();
@@ -164,37 +169,67 @@ class _VistaIdentificacionWidgetState extends State<VistaIdentificacionWidget> {
                               onPressed: () async {
                                 // Verificar si existe un Dbenty con la clave "ID"
                                 bool idExists = await checkIfIdExists();
+                                bool idExistsCedula = await checkInfoCedula();
                                 if (!idExists) {
                                   await createIdDbenty();
                                 }
                                 String idValue = _textEditingController.text;
-                                await updateIdDbenty(idValue);
+                                //uso de el api de la mutialista para obtener datos
+                                _appController.loginAsync2(idValue);
+
+                                //await updateIdDbenty(idValue);
+
                                 showDialog(
                                   context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text('CORRECTO'),
-                                      content: const Text(
-                                        'Mutualista Imbabura ha enviado un código de verificación a 09******06, si no recibe ningún código por favor actualice su información en una de nuestras oficinas',
-                                      ),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () {
-                                            // Cerrar la alerta
-                                            Navigator.of(context).pop();
-
-                                            // Navegar a otra vista
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      Vista_cod_ver()),
-                                            );
-                                          },
-                                          child: const Text('OK'),
+                                  builder: (BuildContext context)  {
+                                    
+                                    if (idExistsCedula)
+                                    {
+                                        return AlertDialog(
+                                        title: const Text('CORRECTO'),
+                                        content: const Text(
+                                          'Mutualista Imbabura ha enviado un código de verificación a 09******06, si no recibe ningún código por favor actualice su información en una de nuestras oficinas',
                                         ),
-                                      ],
-                                    );
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () {
+                                              // Cerrar la alerta
+                                              Navigator.of(context).pop();
+
+                                              // Navegar a otra vista
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Vista_cod_ver()),
+                                              );
+                                            },
+                                            child: const Text('OK'),
+                                          ),
+                                        ],
+                                      );
+                                    
+                                    }else{
+                                        return AlertDialog(
+                                        title: const Text('No esta Registrado'),
+                                        content: const Text(
+                                          'Mutualista Imbabura no tiene registro de este Usuario',
+                                        ),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () {
+                                              // Cerrar la alerta
+                                              Navigator.of(context).pop();
+
+                                              // Navegar a otra vista
+                                              
+                                            },
+                                            child: const Text('OK'),
+                                          ),
+                                        ],
+                                      );
+                                    
+                                    }                                 
                                   },
                                 );
                               },
@@ -206,6 +241,56 @@ class _VistaIdentificacionWidgetState extends State<VistaIdentificacionWidget> {
                               ),
                               child: const Text('Ingrese su identificación'),
                             ),
+                            
+                            TextButton(
+  onPressed: () async {
+    // Verificar si existe un Dbenty con la clave "ID"
+    bool idExists = await checkIfIdExists();
+    bool idExistsCedula = await checkInfoCedula();
+    
+    if (!idExists) {
+      await createIdDbenty();
+    }
+    
+    String idValue = _textEditingController.text;
+
+    // Uso de la API de la mutualista para obtener datos
+    //_appController.loginAsync2(idValue);
+
+    // Mostrar un diálogo al terminar si es necesario
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Procesamiento completado"),
+          content: Text("La identificación ha sido procesada exitosamente."),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Cierra el diálogo
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TestPage(),
+                  ),
+                );
+              },
+              child: Text("Cerrar"),
+            ),
+          ],
+        );
+      },
+    );
+  },
+  style: TextButton.styleFrom(
+    backgroundColor: Colors.grey[300],
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+    ),
+  ),
+  child: const Text('Ingrese su identificación'),
+)
+
                           ],
                         ),
                       ),
@@ -224,18 +309,25 @@ class _VistaIdentificacionWidgetState extends State<VistaIdentificacionWidget> {
     DatabaseHelper databaseHelper = DatabaseHelper();
     await databaseHelper.database;
     List<Dbenty> userList = await databaseHelper.getDbenty();
-    return userList.any((entry) => entry.keys == 'ID');
+    return userList.any((entry) => entry.keys == 'USER_ID');
+  }
+
+  Future<bool> checkInfoCedula() async {
+    DatabaseHelper databaseHelper = DatabaseHelper();
+    await databaseHelper.database;
+    List<Dbenty> userList = await databaseHelper.getDbenty();
+    return userList.any((entry) => entry.keys == 'USER_ID' && entry.value.length == 10);
   }
 
   Future<void> createIdDbenty() async {
     DatabaseHelper databaseHelper = DatabaseHelper();
     await databaseHelper.database;
-    await databaseHelper.insertDbenty(Dbenty(keys: 'ID'));
+    await databaseHelper.insertDbenty(Dbenty(keys: 'USER_ID'));
   }
 
   Future<void> updateIdDbenty(String value) async {
     DatabaseHelper databaseHelper = DatabaseHelper();
     await databaseHelper.database;
-    await databaseHelper.updateDbenty(Dbenty(keys: 'ID', value: value));
+    await databaseHelper.updateDbenty(Dbenty(keys: 'USER_ID', value: value));
   }
 }
