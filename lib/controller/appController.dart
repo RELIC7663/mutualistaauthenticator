@@ -1,4 +1,5 @@
 import 'dart:convert'; 
+import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
 import 'package:mutualistaauthenticator/Model/Requests.dart';
 import 'package:mutualistaauthenticator/Model/Responses.dart';
@@ -6,6 +7,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:mutualistaauthenticator/Services/generalServies.dart';
 import 'package:mutualistaauthenticator/controller/database_helper.dart';
 import 'package:mutualistaauthenticator/Model/dbenty.dart';
+
 class appController {
 
   
@@ -58,19 +60,21 @@ class appController {
 
         DatabaseHelper databaseHelper = DatabaseHelper();
         // Guarda el token
-        await databaseHelper.updateDbenty(Dbenty(keys: 'TOKEN', value: jsonEncode(loginResponse)));// Guarda el ID del usuario
-        await databaseHelper.updateDbenty(Dbenty(keys: 'USER_ID', value: loginResponse.idResponse.toString())); // id del responsive
-        await databaseHelper.updateDbenty(Dbenty(keys: 'NUM_INTENTOS', value: '0')); // El número de intentos es 0 al inicio
+        await databaseHelper.insertDbenty(Dbenty(keys: 'TOKEN', value: jsonEncode(loginResponse)));// Guarda el ID del usuario
+        await databaseHelper.insertDbenty(Dbenty(keys: 'USER_ID', value: loginResponse.idResponse.toString())); // id del responsive
+        await databaseHelper.insertDbenty(Dbenty(keys: 'NUM_INTENTOS', value: '0')); // El número de intentos es 0 al inicio
 
       }
 
     }else{
+      
       String mensaje;
       mensaje = "Error de conexión";
     }
     
   }
 
+  
 
 
 }

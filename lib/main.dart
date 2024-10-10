@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:mutualistaauthenticator/Model/Responses.dart';
 import 'package:mutualistaauthenticator/Model/dbenty.dart';
 import 'package:mutualistaauthenticator/Views/view_auth.dart';
+import 'package:mutualistaauthenticator/Views/no_connection.dart';
 import 'package:mutualistaauthenticator/Views/view_otp.dart';
 import 'package:mutualistaauthenticator/Views/view_cod_ver.dart';
 import 'package:mutualistaauthenticator/Views/view_login_pin.dart';
 import 'package:mutualistaauthenticator/controller/database_helper.dart';
+import 'package:mutualistaauthenticator/Services/generalServies.dart';
 
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-
+  
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<String>(
@@ -38,6 +41,7 @@ class MyApp extends StatelessWidget {
                 '/generarOTP': (context) => const VistaOTPWidget(),
                 '/cod_ver': (context) => const Vista_cod_ver(),
                 '/pin': (context) => const VistaIdentificacionWidget1(),
+                '/SinConexion': (context)=> const SinConexionScreen(),
               },
             );
           }
@@ -49,7 +53,7 @@ class MyApp extends StatelessWidget {
   static Future<String> getInitialRoute() async {
     DatabaseHelper databaseHelper = DatabaseHelper();
     await databaseHelper.database;
-
+    final Generalservies _app_services = Generalservies();
     List<Dbenty> userList = await databaseHelper.getDbenty();
 
     // Busca un objeto Dbenty con la clave "Pin" en la lista userList
@@ -63,15 +67,20 @@ class MyApp extends StatelessWidget {
       (entry) => entry.keys == 'USER_ID', // Cambia 'ID' por la clave que uses para el ID del usuario
       orElse: () => Dbenty(keys: '', value: ''), // Si no se encuentra, crea un objeto vacío
     );
- 
+    final Response asd = await _app_services.checkConnection();
     // Verifica si la longitud del valor del pin es mayor a 4
-    if (idEntry.value.length > 9) {
+    if (idEntry.value.length > 9 && asd.isSuccess ==true) {
       // Aquí puedes retornar la ruta que desees, por ejemplo:
       if (pinEntry.value.length > 4) {
         return '/pin';
       } 
       return '/generarOTP'; // O la ruta que necesites cuando el ID es mayor a 9 caracteres
-    } else {
+    }else if (asd.isSuccess ==false) {
+      
+      return '/SinConexion';
+      
+      
+    }else {
       return '/';
     }
 
