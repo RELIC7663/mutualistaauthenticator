@@ -145,11 +145,8 @@ class appController {
 
       if (response2.isSuccess==true) {
        
-
-        String responseJson = '{"time": "encryptedTimeString", "value": "encryptedTokenValue"}';
-        
         // Parsear la respuesta JSON
-        Map<String, dynamic> responseMap = jsonDecode(responseJson);
+        Map<String, dynamic> responseMap = jsonDecode(response2.result);
         HomeResponse homeResponse = HomeResponse.fromJson(responseMap);
 
         // Desencriptar el tiempo y el token
@@ -173,8 +170,6 @@ class appController {
             progress += progressValue;
           }
         });
-
-
 
       } else {
         mostrarAlerta("", "Por favor vuelva a intentarlo o compruebe su conexión a internet");
