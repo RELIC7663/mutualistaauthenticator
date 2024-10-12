@@ -74,6 +74,64 @@ class DatabaseHelper {
     var db = await this.database;
     int result = await db.delete(userTable);
     return result;
+
+
   }
+
+    Future<void> update_NUM_INTENTOS_Dbenty(String value) async {
+    DatabaseHelper databaseHelper = DatabaseHelper();
+    await databaseHelper.database;
+    await databaseHelper.updateDbenty(Dbenty(keys: 'NUM_INTENTOS', value: value));
+  }
+
+  Future<void> update_Token_Dbenty(String value) async {
+    DatabaseHelper databaseHelper = DatabaseHelper();
+    await databaseHelper.database;
+    await databaseHelper.updateDbenty(Dbenty(keys: 'TOKEN', value: value));
+  }
+
+  Future<int> getNumIntentos() async {
+    DatabaseHelper databaseHelper = DatabaseHelper();
+    await databaseHelper.database;
+    List<Dbenty> userList = await databaseHelper.getDbenty();
+    
+    // Buscar la entrada que tenga 'NUM_INTENTOS' como clave
+    Dbenty? numIntentosEntry = userList.firstWhere(
+      (entry) => entry.keys == 'NUM_INTENTOS', 
+      orElse: () => Dbenty(keys: 'NUM_INTENTOS', value: '0') // Retornar '0' si no se encuentra
+    );
+
+    // Convertir el valor a entero
+    return int.tryParse(numIntentosEntry.value ?? '0') ?? 0; 
+  }
+
+  Future<String> getToken() async {
+    DatabaseHelper databaseHelper = DatabaseHelper();
+    await databaseHelper.database;
+    List<Dbenty> userList = await databaseHelper.getDbenty();
+    
+    // Buscar la entrada que tenga 'NUM_INTENTOS' como clave
+    Dbenty? numIntentosEntry = userList.firstWhere(
+      (entry) => entry.keys == 'TOKEN', 
+      orElse: () => Dbenty(keys: 'TOKEN', value: '0') // Retornar '0' si no se encuentra
+    );
+
+    
+    return numIntentosEntry.value;
+  }
+
+  Future<int> getUSER() async {
+    DatabaseHelper databaseHelper = DatabaseHelper();
+    await databaseHelper.database;
+    List<Dbenty> userList = await databaseHelper.getDbenty();
+    
+    // Buscar la entrada que tenga 'USER_ID' como clave
+    Dbenty? numIntentosEntry = userList.firstWhere(
+      (entry) => entry.keys == 'USER_ID', 
+      orElse: () => Dbenty(keys: 'USER_ID', value: '0') // Retornar '0' si no se encuentra
+    );
+    return int.tryParse(numIntentosEntry.value ?? '0') ?? 0; 
+  }
+
 
 }

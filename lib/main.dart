@@ -69,7 +69,7 @@ class MyApp extends StatelessWidget {
     );
     final Response asd = await _app_services.checkConnection();
     // Verifica si la longitud del valor del pin es mayor a 4
-    if (idEntry.value.length > 9 && asd.isSuccess ==true) {
+    if (idEntry.value.length > 9 && asd.isSuccess ==true && idEntry.value.length < 11) {
       // Aquí puedes retornar la ruta que desees, por ejemplo:
       if (pinEntry.value.length > 4) {
         return '/pin';
@@ -78,8 +78,6 @@ class MyApp extends StatelessWidget {
     }else if (asd.isSuccess ==false) {
       
       return '/SinConexion';
-      
-      
     }else {
       return '/';
     }
