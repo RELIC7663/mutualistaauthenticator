@@ -6,6 +6,7 @@ import 'package:mutualistaauthenticator/Views/no_connection.dart';
 import 'package:mutualistaauthenticator/Views/view_otp.dart';
 import 'package:mutualistaauthenticator/Views/view_cod_ver.dart';
 import 'package:mutualistaauthenticator/Views/view_login_pin.dart';
+import 'package:mutualistaauthenticator/Views/loading.dart';
 import 'package:mutualistaauthenticator/controller/database_helper.dart';
 import 'package:mutualistaauthenticator/Services/generalServies.dart';
 
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
                 '/cod_ver': (context) => const Vista_cod_ver(),
                 '/pin': (context) => const VistaIdentificacionWidget1(),
                 '/SinConexion': (context)=> const SinConexionScreen(),
+                '/Loading': (context)=> const CargandoScreen(),
               },
             );
           }
