@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:mutualistaauthenticator/Model/Responses.dart';
 import 'package:mutualistaauthenticator/Views/view_cod_ver.dart';
 import 'package:mutualistaauthenticator/controller/database_helper.dart';
 import 'package:mutualistaauthenticator/Model/dbenty.dart';
 import 'package:mutualistaauthenticator/controller/appController.dart';
 import 'package:mutualistaauthenticator/Views/test.dart';
 //import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mutualistaauthenticator/Services/generalServies.dart';
+import 'package:flutter/services.dart';
+
 
 void main() => runApp(const MyApp());
 
@@ -34,6 +38,7 @@ class _VistaIdentificacionWidgetState extends State<VistaIdentificacionWidget> {
   late FocusNode _focusNode;
   TextEditingController _textEditingController = TextEditingController();
 
+  final Generalservies _appservice = Generalservies();
   final appController _appController = appController();
   final DatabaseHelper _appdb = DatabaseHelper();
   @override
@@ -162,6 +167,7 @@ class _VistaIdentificacionWidgetState extends State<VistaIdentificacionWidget> {
                               ),
                               keyboardType: TextInputType
                                   .number, // Cambia TextInputType.emailAddress a TextInputType.number
+                                  
                               style: TextStyle(color: Colors.white),
                             ),
                             const SizedBox(height: 16),
@@ -170,6 +176,7 @@ class _VistaIdentificacionWidgetState extends State<VistaIdentificacionWidget> {
                                 // Verificar si existe un Dbenty con la clave "ID"
                                 bool idExists = await checkIfIdExists();
                                 bool idExistsCedula = await checkInfoCedula();
+                                bool idconnection = await _appservice.hasInternetConnection();
                                 if (!idExists) {
                                   await createIdDbenty();
                                 }
@@ -182,54 +189,73 @@ class _VistaIdentificacionWidgetState extends State<VistaIdentificacionWidget> {
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context)  {
-                                    
-                                    if (idExistsCedula)
-                                    {
+                                    if (idconnection==true){
+                                      if (idExistsCedula)
+                                      {
                                         return AlertDialog(
-                                        title: const Text('CORRECTO'),
-                                        content: const Text(
-                                          'Mutualista Imbabura ha enviado un código de verificación a 09******06, si no recibe ningún código por favor actualice su información en una de nuestras oficinas',
-                                        ),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            onPressed: () {
-                                              // Cerrar la alerta
-                                              Navigator.of(context).pop();
-
-                                              // Navegar a otra vista
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        Vista_cod_ver()),
-                                              );
-                                            },
-                                            child: const Text('OK'),
+                                          title: const Text('CORRECTO'),
+                                          content: const Text(
+                                            'Mutualista Imbabura ha enviado un código de verificación a 09******06, si no recibe ningún código por favor actualice su información en una de nuestras oficinas',
                                           ),
-                                        ],
-                                      );
-                                    
-                                    }else{
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () {
+                                                // Cerrar la alerta
+                                                Navigator.of(context).pop();
+
+                                                // Navegar a otra vista
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Vista_cod_ver()),
+                                                );
+                                              },
+                                              child: const Text('OK'),
+                                            ),
+                                          ],
+                                        );
+                                      
+                                      }else{
                                         return AlertDialog(
-                                        title: const Text('No esta Registrado'),
-                                        content: const Text(
-                                          'Mutualista Imbabura no tiene registro de este Usuario',
-                                        ),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            onPressed: () {
-                                              // Cerrar la alerta
-                                              Navigator.of(context).pop();
-
-                                              // Navegar a otra vista
-                                              
-                                            },
-                                            child: const Text('OK'),
+                                          title: const Text('No esta Registrado'),
+                                          content: const Text(
+                                            'Mutualista Imbabura no tiene registro de este Usuario',
                                           ),
-                                        ],
-                                      );
-                                    
-                                    }                                 
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () {
+                                                // Cerrar la alerta
+                                                Navigator.of(context).pop();
+
+                                                // Navegar a otra vista
+                                                
+                                              },
+                                              child: const Text('OK'),
+                                            ),
+                                          ],
+                                        );
+
+                                      } 
+                                    }
+                                    else{
+                                      return AlertDialog(
+                                          title: const Text('Error de Conexión'),
+                                          content: const Text(
+                                            'No se pudo establecer una conexión con el servidor. Por favor, verifica tu conexión a internet e intenta nuevamente.',
+                                          ),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () {
+                                                // Cerrar la alerta
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text('OK'),
+                                            ),
+                                          ],
+                                        );
+
+                                    }                                   
                                   },
                                 );
                               },
@@ -331,3 +357,4 @@ class _VistaIdentificacionWidgetState extends State<VistaIdentificacionWidget> {
     await databaseHelper.updateDbenty(Dbenty(keys: 'USER_ID', value: value));
   }
 }
+

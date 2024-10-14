@@ -6,24 +6,39 @@ import 'package:mutualistaauthenticator/Services/generalServies.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'dart:convert';  // Para usar jsonEncode y jsonDecode
 import 'package:http/http.dart' as http;
-
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'dart:io';
 
 class Generalservies {
 
   var url = "https://bancaweb.mutualistaimbabura.com/TokenAPi/api/";
-  
+  final Connectivity _connectivity = Connectivity();
   // Suponiendo que ya tienes las clases LoginRequest, Response, y TokenResponse creadas
+
+  Future<bool> hasInternetConnection() async {
+    // Verificar si está conectado a alguna red (Wi-Fi, datos móviles, etc.)
+    var connectivityResult = await (_connectivity.checkConnectivity());
+    
+    // Si no está conectado a ninguna red, devolver false
+    if (connectivityResult == ConnectivityResult.none) {
+      return false;
+    }
+
+    // Verificar si realmente puede acceder a Internet (por ejemplo, ping a Google)
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        return true;
+      }
+    } catch (e) {
+      return false;
+    }
+
+    return false;
+  }
 
   Future<Response> checkConnection() async {
     try {
-      // Verifica si hay conexión a la red
-      var connectivityResult = await Connectivity().checkConnectivity();
-      if (connectivityResult == ConnectivityResult.none) {
-        return Response(
-          isSuccess: false,
-          message: "No internet connection available",
-        );
-      }
 
       // Verifica si se puede llegar a google.com
       final result = await http.get(Uri.parse('https://www.google.com'));

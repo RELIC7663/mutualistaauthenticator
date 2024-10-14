@@ -201,9 +201,9 @@ class CreatePinView extends StatelessWidget {
                                   if (!pinExists) {
                                     await createPinDbenty();
                                   }
-                                  //await updatePIN(_pinCode1);
+                                  await updatePIN(_pinCode1);
                                   // Navegar a otra vista
-                                  Navigator.push(
+                                  Navigator.pushReplacement(
                                     
                                     context,
                                     MaterialPageRoute(

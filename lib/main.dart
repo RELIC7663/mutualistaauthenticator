@@ -69,17 +69,14 @@ class MyApp extends StatelessWidget {
       (entry) => entry.keys == 'USER_ID', // Cambia 'ID' por la clave que uses para el ID del usuario
       orElse: () => Dbenty(keys: '', value: ''), // Si no se encuentra, crea un objeto vacío
     );
-    final Response asd = await _app_services.checkConnection();
+    bool asd = await _app_services.hasInternetConnection();
     // Verifica si la longitud del valor del pin es mayor a 4
-    if (idEntry.value.length > 9 && asd.isSuccess ==true && idEntry.value.length < 11) {
+    if (idEntry.value.length > 9 && asd==true && idEntry.value.length < 11) {
       // Aquí puedes retornar la ruta que desees, por ejemplo:
       if (pinEntry.value.length > 4) {
         return '/pin';
       } 
       return '/generarOTP'; // O la ruta que necesites cuando el ID es mayor a 9 caracteres
-    }else if (asd.isSuccess ==false) {
-      
-      return '/SinConexion';
     }else {
       return '/';
     }
