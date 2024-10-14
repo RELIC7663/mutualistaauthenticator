@@ -145,7 +145,7 @@ class _Vista_cod_verState extends State<Vista_cod_ver>
                                       TextButton(
                                         onPressed: () {
                                           Navigator.of(context).pop();
-                                          Navigator.push(
+                                          Navigator.pushReplacement(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>

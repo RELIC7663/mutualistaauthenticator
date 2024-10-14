@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:mutualistaauthenticator/Model/Responses.dart';
 import 'package:mutualistaauthenticator/Views/view_cod_ver.dart';
 import 'package:mutualistaauthenticator/controller/database_helper.dart';
@@ -176,7 +177,7 @@ class _VistaIdentificacionWidgetState extends State<VistaIdentificacionWidget> {
                                 // Verificar si existe un Dbenty con la clave "ID"
                                 bool idExists = await checkIfIdExists();
                                 bool idExistsCedula = await checkInfoCedula();
-                                bool idconnection = await _appservice.hasInternetConnection();
+                                final idconnection = await _appservice.checkConnection();
                                 if (!idExists) {
                                   await createIdDbenty();
                                 }
@@ -189,7 +190,7 @@ class _VistaIdentificacionWidgetState extends State<VistaIdentificacionWidget> {
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context)  {
-                                    if (idconnection==true){
+                                    if (idconnection.isSuccess==true){
                                       if (idExistsCedula)
                                       {
                                         return AlertDialog(
@@ -204,7 +205,7 @@ class _VistaIdentificacionWidgetState extends State<VistaIdentificacionWidget> {
                                                 Navigator.of(context).pop();
 
                                                 // Navegar a otra vista
-                                                Navigator.push(
+                                                Navigator.pushReplacement(
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>

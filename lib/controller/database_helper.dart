@@ -20,6 +20,13 @@ class DatabaseHelper {
     return _databaseHelper!;
   }
 
+  Future<bool> checkIfPinExists() async {
+    DatabaseHelper databaseHelper = DatabaseHelper();
+    await databaseHelper.database;
+    List<Dbenty> userList = await databaseHelper.getDbenty();
+    return userList.any((entry) => entry.keys == 'PIN');
+  }
+
   bool _isDatabaseInitialized = false;
 
   Future<Database> get database async {
@@ -103,6 +110,21 @@ class DatabaseHelper {
 
     // Convertir el valor a entero
     return int.tryParse(numIntentosEntry.value ?? '0') ?? 0; 
+  }
+
+ Future<String> getPIN() async {
+    DatabaseHelper databaseHelper = DatabaseHelper();
+    await databaseHelper.database;
+    List<Dbenty> userList = await databaseHelper.getDbenty();
+    
+    // Buscar la entrada que tenga 'NUM_INTENTOS' como clave
+    Dbenty? numIntentosEntry = userList.firstWhere(
+      (entry) => entry.keys == 'PIN', 
+      orElse: () => Dbenty(keys: 'PIN', value: '0') // Retornar '0' si no se encuentra
+    );
+
+    // Convertir el valor a entero
+    return numIntentosEntry.value;
   }
 
   Future<String> getToken() async {

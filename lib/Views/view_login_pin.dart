@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:mutualistaauthenticator/Views/view_otp.dart';
 import 'package:mutualistaauthenticator/Model/dbenty.dart';
 import 'package:mutualistaauthenticator/controller/database_helper.dart';
+import 'package:flutter/services.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 
 class VistaIdentificacionWidget1 extends StatefulWidget {
   const VistaIdentificacionWidget1({Key? key}) : super(key: key);
-
+  
   @override
   _VistaIdentificacionWidget1State createState() =>
       _VistaIdentificacionWidget1State();
@@ -43,6 +45,9 @@ class _VistaIdentificacionWidget1State
 
   @override
   Widget build(BuildContext context) {
+    
+    String _pinCode1 = '';
+    DatabaseHelper _asd = DatabaseHelper();
     return Scaffold(
       backgroundColor: const Color(0xFF222e7a),
       appBar: AppBar(
@@ -99,96 +104,97 @@ class _VistaIdentificacionWidget1State
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: FractionallySizedBox(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          const SizedBox(height: 16),
-                          TextFormField(
-                            controller: _pinController,
-                            decoration: InputDecoration(
-                              labelText: 'Ingrese su PIN',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(
-                                  color: Colors.white,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(
-                                  color: Color.fromARGB(255, 170, 170, 170),
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(
-                                  color: Colors.white,
-                                ),
-                              ),
-                              labelStyle: const TextStyle(
-                                color: Colors.white,
-                              ),
-                              contentPadding: const EdgeInsets.all(24),
-                            ),
-                            keyboardType: TextInputType.number,
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                          const SizedBox(height: 16),
-                          TextButton(
-                            onPressed: () async {
-                              String pin = _pinController.text;
-                              bool isValid = await verifyPIN(pin);
-
-                              // Mostrar una alerta según el resultado de la verificación
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text(isValid ? 'CORRECTO' : 'ERROR'),
-                                    content: Text(isValid
-                                        ? 'Ingreso Exitoso!!'
-                                        : 'PIN incorrecto. Por favor, inténtelo de nuevo.'),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        onPressed: () async {
-                                          // Cerrar la alerta
-                                          Navigator.of(context).pop();
-
-                                          // Si el PIN es válido, actualizarlo en la base de datos
-                                          if (isValid) {
-                                            await updatePIN(pin);
-                                            // Navegar a la siguiente vista
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    VistaOTPWidget(),
-                                              ),
-                                            );
-                                          }
-                                        },
-                                        child: const Text('OK'),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                            style: TextButton.styleFrom(
-                              backgroundColor: Colors.grey[300],
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            child: const Text('Continuar'),
-                          ),
-                        ],
+                    padding: const EdgeInsets.all(30),
+                    child: PinCodeTextField(
+                      appContext: context,
+                      length: 6,
+                      onChanged: (value) {
+                        // Manejar el cambio en el PIN ingresado
+                        print(value);
+                      },
+                      textStyle: TextStyle(
+                          color: Colors
+                              .white), // Establece el color del texto a blanco
+                      pinTheme: PinTheme(
+                        fieldHeight: 50,
+                        fieldWidth: 40,
+                        borderWidth: 2,
+                        borderRadius: BorderRadius.circular(12),
+                        shape: PinCodeFieldShape.box,
+                        activeColor: Colors.white,
+                        inactiveColor: Colors.white,
+                        selectedColor: Colors.white,
+                        activeFillColor: Colors.transparent,
+                        inactiveFillColor: Colors.transparent,
+                        selectedFillColor: Colors.transparent,
                       ),
+                      obscureText:
+                          true, // Hace que los caracteres del PIN sean ocultos
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        // Validar que el PIN tenga una longitud de 6 caracteres
+                        if (value!.length != 6) {
+                          return 'El PIN debe tener 6 dígitos';
+                        }
+                        return null; // Retorna null si la validación es exitosa
+                      },
+                      // Almacena el valor ingresado en la variable pinCode1
+                      // para su posterior comparación
+                      onCompleted: (value) {
+                        // Almacenar el PIN completado en la variable pinCode1
+                        _pinCode1 = value;
+                      },
                     ),
                   ),
+                  ElevatedButton(
+                    onPressed:  () async {
+                      // Acción para confirmar la creación del PIN
+                      // Esto puede incluir navegación a la siguiente vista
+                      final asd1 = _asd.getPIN();
+                      bool isValid = await verifyPIN(_pinCode1);
+                      if (isValid==false) {
+                        // Si los PINs no coinciden, mostrar un mensaje de error
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Error'),
+                          ),
+                        );
+                        return;
+                      }
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Correcto'),
+                            content: const Text(
+                              'Ingresando..',
+                            ),
+                            actions: <Widget>[
+                              
+                              TextButton(
+                                onPressed: () async {
+                                  // Acción al presionar el botón de confirmar
+                                  Navigator.of(context).pop();
+                                  
+                                  Navigator.pushReplacement(
+                                    
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            VistaOTPWidget()),
+                                  );
+                                },
+                                child: const Text('Confirmar'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    child: Text('Confirmar'),
+                  ),
+                  
+                
                 ],
               ),
             ),

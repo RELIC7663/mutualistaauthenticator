@@ -181,7 +181,7 @@ class _VistaOTPWidgetState extends State<VistaOTPWidget>
                               
 
                               // Navegar a otra vista
-                              Navigator.push(
+                              Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
