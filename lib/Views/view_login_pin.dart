@@ -103,95 +103,105 @@ class _VistaIdentificacionWidget1State
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(30),
-                    child: PinCodeTextField(
-                      appContext: context,
-                      length: 6,
-                      onChanged: (value) {
-                        // Manejar el cambio en el PIN ingresado
-                        print(value);
-                      },
-                      textStyle: TextStyle(
-                          color: Colors
-                              .white), // Establece el color del texto a blanco
-                      pinTheme: PinTheme(
-                        fieldHeight: 50,
-                        fieldWidth: 40,
-                        borderWidth: 2,
-                        borderRadius: BorderRadius.circular(12),
-                        shape: PinCodeFieldShape.box,
-                        activeColor: Colors.white,
-                        inactiveColor: Colors.white,
-                        selectedColor: Colors.white,
-                        activeFillColor: Colors.transparent,
-                        inactiveFillColor: Colors.transparent,
-                        selectedFillColor: Colors.transparent,
-                      ),
-                      obscureText:
-                          true, // Hace que los caracteres del PIN sean ocultos
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        // Validar que el PIN tenga una longitud de 6 caracteres
-                        if (value!.length != 6) {
-                          return 'El PIN debe tener 6 dígitos';
-                        }
-                        return null; // Retorna null si la validación es exitosa
-                      },
-                      // Almacena el valor ingresado en la variable pinCode1
-                      // para su posterior comparación
-                      onCompleted: (value) {
-                        // Almacenar el PIN completado en la variable pinCode1
-                        _pinCode1 = value;
-                      },
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed:  () async {
-                      // Acción para confirmar la creación del PIN
-                      // Esto puede incluir navegación a la siguiente vista
-                      final asd1 = _asd.getPIN();
-                      bool isValid = await verifyPIN(_pinCode1);
-                      if (isValid==false) {
-                        // Si los PINs no coinciden, mostrar un mensaje de error
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Error'),
+                  Padding(padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(30),
+                        child: PinCodeTextField(
+                          appContext: context,
+                          length: 6,
+                          onChanged: (value) {
+                            // Manejar el cambio en el PIN ingresado
+                            print(value);
+                          },
+                          textStyle: TextStyle(
+                              color: Colors
+                                  .white), // Establece el color del texto a blanco
+                          pinTheme: PinTheme(
+                            fieldHeight: 50,
+                            fieldWidth: 40,
+                            borderWidth: 2,
+                            borderRadius: BorderRadius.circular(12),
+                            shape: PinCodeFieldShape.box,
+                            activeColor: Colors.white,
+                            inactiveColor: Colors.white,
+                            selectedColor: Colors.white,
+                            activeFillColor: Colors.transparent,
+                            inactiveFillColor: Colors.transparent,
+                            selectedFillColor: Colors.transparent,
                           ),
-                        );
-                        return;
-                      }
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text('Correcto'),
-                            content: const Text(
-                              'Ingresando..',
-                            ),
-                            actions: <Widget>[
-                              
-                              TextButton(
-                                onPressed: () async {
-                                  // Acción al presionar el botón de confirmar
-                                  Navigator.of(context).pop();
-                                  
-                                  Navigator.pushReplacement(
-                                    
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            VistaOTPWidget()),
-                                  );
-                                },
-                                child: const Text('Confirmar'),
+                          obscureText:
+                              true, // Hace que los caracteres del PIN sean ocultos
+                          keyboardType: TextInputType.number,
+                          validator: (value) {
+                            // Validar que el PIN tenga una longitud de 6 caracteres
+                            if (value!.length != 6) {
+                              return 'El PIN debe tener 6 dígitos';
+                            }
+                            return null; // Retorna null si la validación es exitosa
+                          },
+                          // Almacena el valor ingresado en la variable pinCode1
+                          // para su posterior comparación
+                          onCompleted: (value) {
+                            // Almacenar el PIN completado en la variable pinCode1
+                            _pinCode1 = value;
+                          },
+                        ),
+                      ),
+                      
+                      ElevatedButton(
+                        onPressed:  () async {
+                          // Acción para confirmar la creación del PIN
+                          // Esto puede incluir navegación a la siguiente vista
+                          
+                          bool isValid = await verifyPIN(_pinCode1);
+                          if (isValid==false) {
+                            // Si los PINs no coinciden, mostrar un mensaje de error
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Error'),
                               ),
-                            ],
+                            );
+                            return;
+                          }
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Correcto'),
+                                content: const Text(
+                                  'Ingresando..',
+                                ),
+                                actions: <Widget>[
+                                  
+                                  TextButton(
+                                    onPressed: () async {
+                                      // Acción al presionar el botón de confirmar
+                                      Navigator.of(context).pop();
+                                      
+                                      Navigator.pushReplacement(
+                                        
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                VistaOTPWidget()),
+                                      );
+                                    },
+                                    child: const Text('Confirmar'),
+                                  ),
+                                ],
+                              );
+                            },
                           );
                         },
-                      );
-                    },
-                    child: Text('Confirmar'),
+                        child: Text('Confirmar'),
+                      ),
+                      
+
+                    ],
+                  ),
                   ),
                   
                 

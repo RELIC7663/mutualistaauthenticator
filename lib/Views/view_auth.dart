@@ -43,6 +43,7 @@ class _VistaIdentificacionWidgetState extends State<VistaIdentificacionWidget> {
   final appController _appController = appController();
   final DatabaseHelper _appdb = DatabaseHelper();
   @override
+  
   void initState() {
     super.initState();
     _focusNode = FocusNode();
@@ -177,21 +178,25 @@ class _VistaIdentificacionWidgetState extends State<VistaIdentificacionWidget> {
                                 // Verificar si existe un Dbenty con la clave "ID"
                                 bool idExists = await checkIfIdExists();
                                 bool idExistsCedula = await checkInfoCedula();
+                                
                                 final idconnection = await _appservice.checkConnection();
                                 if (!idExists) {
-                                  await createIdDbenty();
+                                  await _appdb.insertDbenty(Dbenty(keys: 'NUM_INTENTOS', value: '0'));
+                                  await _appdb.insertDbenty(Dbenty(keys: 'ID', value: '0'));
+                                  await _appdb.insertDbenty(Dbenty(keys: 'USER_ID', value: '0'));
+                                  await _appdb.insertDbenty(Dbenty(keys: 'TOKEN', value: '0'));
                                 }
+
+                                
                                 String idValue = _textEditingController.text;
                                 //uso de el api de la mutialista para obtener datos
-                                _appController.loginAsync2(idValue);
-
-                                //await updateIdDbenty(idValue);
-
+                                bool solicitud =await _appController.loginAsync2(idValue);
+                                
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context)  {
                                     if (idconnection.isSuccess==true){
-                                      if (idExistsCedula)
+                                      if (solicitud)
                                       {
                                         return AlertDialog(
                                           title: const Text('CORRECTO'),
@@ -276,7 +281,10 @@ class _VistaIdentificacionWidgetState extends State<VistaIdentificacionWidget> {
     bool idExistsCedula = await checkInfoCedula();
     
     if (!idExists) {
-      await createIdDbenty();
+      await _appdb.insertDbenty(Dbenty(keys: 'NUM_INTENTOS', value: '0'));
+      await _appdb.insertDbenty(Dbenty(keys: 'ID', value: '0'));
+      await _appdb.insertDbenty(Dbenty(keys: 'USER_ID', value: '0'));
+      await _appdb.insertDbenty(Dbenty(keys: 'TOKEN', value: '0'));
     }
     
     String idValue = _textEditingController.text;
@@ -343,8 +351,8 @@ class _VistaIdentificacionWidgetState extends State<VistaIdentificacionWidget> {
     DatabaseHelper databaseHelper = DatabaseHelper();
     await databaseHelper.database;
     List<Dbenty> userList = await databaseHelper.getDbenty();
-    return userList.any((entry) => entry.keys == 'USER_ID' && entry.value.length == 10);
-  }
+    return userList.any((entry) => entry.keys == 'ID' && entry.value.length == 10);
+  } 
 
   Future<void> createIdDbenty() async {
     DatabaseHelper databaseHelper = DatabaseHelper();
@@ -358,4 +366,5 @@ class _VistaIdentificacionWidgetState extends State<VistaIdentificacionWidget> {
     await databaseHelper.updateDbenty(Dbenty(keys: 'USER_ID', value: value));
   }
 }
+
 

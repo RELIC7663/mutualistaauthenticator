@@ -9,6 +9,7 @@ import 'dart:async';
 
 
 
+
 class appController {
 
   
@@ -19,9 +20,10 @@ class appController {
   var url = "https://bancaweb.mutualistaimbabura.com/TokenAPi/api/";
     
   
-  Future<void> loginAsync2(String cedula) async {
+  Future<bool> loginAsync2(String cedula) async {
 
     Response datosconecction = await _apiService.checkConnection();
+    
     if ( datosconecction.isSuccess == true)
     {
         LoginRequest request = LoginRequest(
@@ -30,13 +32,23 @@ class appController {
 
       // Llamada al servicio API
       
-      Response response = await _apiService.loginAsync(url, "TokenRegistros", "/RequestCode", request);
+      //Response response = await _apiService.loginAsync(url, "TokenRegistros", "/RequestCode", request);
       //pilas
 
-      if (!response.isSuccess!) {
+      Response response1  = Response(
+        isSuccess: true,
+        result: TokenResponse (
+          token : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMzQ0NTk3IiwianRpIjoiYjQ3MmE5NzUtNzZmMy00OThkLTk1YTYtMDk0NDdlMWFhZmQxIiwiZXhwIjoxNzI4OTM2NjA5LCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo0NDMyMS8iLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo0NDMyMS8ifQ.AfCUCLjE5zSqtQzFXIk-m31WWUPReXVRPTn_NBYi0zI",
+          idResponse : 1344597,
+          email :"09******06",
+          cliId: null,
+        ),
+      );
+
+      if (!response1.isSuccess!) {
         String mensaje;
 
-        if (response.message == "0") {
+        if (response1.message == "0") {
           // Valida la longitud de la identificación
           switch (cedula.length) {
             case 10:
@@ -49,32 +61,43 @@ class appController {
               mensaje = "Su identificación es incorrecta";
               break;
           }
-        } else if (response.message == "1") {
+          
+        } else if (response1.message == "1") {
           mensaje = "Su aplicación ya se encuentra iniciada en otro dispositivo, cierre sesión e inténtelo nuevamente";
-        } else if (response.message == "2") {
+          return false;
+        } else if (response1.message == "2") {
           mensaje = "Su acceso se encuentra bloqueado, comuníquese con su asesor";
+          return false;
         } else {
           mensaje = "Ha ocurrido una interrupción con el servicio, por favor inténtelo nuevamente";
+          return false;
         }
 
         print(mensaje); // Muestra el mensaje al usuario o lo guarda en algún lugar según tu lógica
+        return false;
 
       } else {
         // MAPEO DEL RESULTADO DE LA RESPUESTA Result
-        TokenResponse loginResponse = TokenResponse.fromJson(response.result);
+
+        
+        TokenResponse loginResponse = response1.result as TokenResponse;
+
 
         DatabaseHelper databaseHelper = DatabaseHelper();
         // Guarda el token
-        await databaseHelper.insertDbenty(Dbenty(keys: 'TOKEN', value: jsonEncode(loginResponse)));// Guarda Token
-        await databaseHelper.insertDbenty(Dbenty(keys: 'USER_ID', value: loginResponse.idResponse.toString())); // id del responsive
-        await databaseHelper.insertDbenty(Dbenty(keys: 'NUM_INTENTOS', value: '0')); // El número de intentos es 0 al inicio
 
+        await databaseHelper.updateDbenty(Dbenty(keys: 'ID', value: cedula));// Guarda Token
+        await databaseHelper.updateDbenty(Dbenty(keys: 'TOKEN', value: jsonEncode(loginResponse)));// Guarda Token
+        await databaseHelper.updateDbenty(Dbenty(keys: 'USER_ID', value: loginResponse.idResponse.toString())); // id del responsive
+        await databaseHelper.updateDbenty(Dbenty(keys: 'NUM_INTENTOS', value: '0')); // El número de intentos es 0 al inicio
+        return true;
       }
 
     }else{
       
       String mensaje;
       mensaje = "Error de conexión";
+      return false;
     }
     
   }
@@ -113,8 +136,7 @@ class appController {
         {
           BlockRequest blockRequest = BlockRequest(tokCliente: loginResponse.idResponse);
           await _apiService.blockUser(url, "TokenRegistros", "/Block", blockRequest);
-          //error 
-          //paso los intentos
+
         }
         
       }
@@ -127,7 +149,7 @@ class appController {
   Future<void> solicitarTokenAsync() async {
     try {
       String tokenJson = await  _apicontrollerdb.getToken();      
-      int User_id = await  _apicontrollerdb.getUSER();      
+      int User_id = await  _apicontrollerdb.get_idUSER();      
       Map<String, dynamic> tokenMap = jsonDecode(tokenJson);
       TokenResponse loginResponse = TokenResponse.fromJson(tokenMap);
       TokenCodeRequest request = TokenCodeRequest(

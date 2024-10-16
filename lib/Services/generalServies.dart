@@ -48,7 +48,7 @@ class Generalservies {
         return Response(
           isSuccess: false,
           message: "Unable to reach the server",
-          result: result.statusCode, // Agrega el código de estado en result
+          result: result.statusCode, 
         );
       }
 
@@ -80,7 +80,7 @@ class Generalservies {
       String result = response.body;
 
       // Verificar si la respuesta fue exitosa
-      if (response.statusCode != 200) {
+      if (response.statusCode != 201) {
         return Response(
           isSuccess: false,
           message: result,

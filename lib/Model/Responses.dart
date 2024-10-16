@@ -42,6 +42,15 @@ class TokenResponse {
       cliId: json['cli_id'],
     );
   }
+  // Método toJson para convertir el objeto en un mapa
+  Map<String, dynamic> toJson() {
+    return {
+      'token': token,
+      'idresponse': idResponse,
+      'email': email,
+      'cli_id': cliId,
+    };
+  }
 }
 
 class HomeResponse {

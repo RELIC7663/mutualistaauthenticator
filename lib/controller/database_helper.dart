@@ -78,9 +78,14 @@ class DatabaseHelper {
   }
 
   Future<int> deleteAllEntries() async {
-    var db = await this.database;
-    int result = await db.delete(userTable);
-    return result;
+    
+    
+    deleteEnty("ID");
+    deleteEnty("USER_ID");
+    deleteEnty("TOKEN");
+    deleteEnty("NUM_INTENTOS");
+    deleteEnty("PIN");
+    return 1;
 
 
   }
@@ -142,7 +147,7 @@ class DatabaseHelper {
     return numIntentosEntry.value;
   }
 
-  Future<int> getUSER() async {
+  Future<int> get_idUSER() async {
     DatabaseHelper databaseHelper = DatabaseHelper();
     await databaseHelper.database;
     List<Dbenty> userList = await databaseHelper.getDbenty();
@@ -155,5 +160,17 @@ class DatabaseHelper {
     return int.tryParse(numIntentosEntry.value ?? '0') ?? 0; 
   }
 
+Future<int> get_USER() async {
+    DatabaseHelper databaseHelper = DatabaseHelper();
+    await databaseHelper.database;
+    List<Dbenty> userList = await databaseHelper.getDbenty();
+    
+    // Buscar la entrada que tenga 'USER_ID' como clave
+    Dbenty? numIntentosEntry = userList.firstWhere(
+      (entry) => entry.keys == 'USER_ID', 
+      orElse: () => Dbenty(keys: 'USER_ID', value: '0') // Retornar '0' si no se encuentra
+    );
+    return int.tryParse(numIntentosEntry.value ?? '0') ?? 0; 
+  }
 
 }

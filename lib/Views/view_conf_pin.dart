@@ -249,6 +249,7 @@ class CreatePinView extends StatelessWidget {
     await databaseHelper.database;
     await databaseHelper.insertDbenty(Dbenty(keys: 'PIN'));
   }
+  
     Future<void> updatePIN(String pin) async {
     DatabaseHelper databaseHelper = DatabaseHelper();
     await databaseHelper.database;
