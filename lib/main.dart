@@ -17,40 +17,40 @@ class MyApp extends StatelessWidget {
   
   @override
 @override
-Widget build(BuildContext context) {
-  return MaterialApp(
-    title: 'Mutualista Imabura',
-    home: FutureBuilder<String>(
-      future: getInitialRoute(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CargandoScreen(); // Pantalla de carga
-        } else if (snapshot.hasError) {
-          return Scaffold(
-            body: Center(
-              child: Text('Error: ${snapshot.error}'),
-            ),
-          );
-        } else {
-          // Redirigir a la pantalla adecuada
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            Navigator.pushReplacementNamed(context, snapshot.data!);
-          });
-          return const SizedBox(); // Pantalla en blanco mientras se navega
-        }
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Mutualista Imabura',
+      home: FutureBuilder<String>(
+        future: getInitialRoute(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CargandoScreen(); // Pantalla de carga
+          } else if (snapshot.hasError) {
+            return Scaffold(
+              body: Center(
+                child: Text('Error: ${snapshot.error}'),
+              ),
+            );
+          } else {
+            // Redirigir a la pantalla adecuada
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Navigator.pushReplacementNamed(context, snapshot.data!);
+            });
+            return const SizedBox(); // Pantalla en blanco mientras se navega
+          }
+        },
+      ),
+      routes: {
+        '/generarOTP': (context) => const VistaOTPWidget(),
+        '/cod_ver': (context) => const Vista_cod_ver(),
+        '/pin': (context) => const VistaIdentificacionWidget1(),
+        '/SinConexion': (context) => const SinConexionScreen(),
+        '/Loading': (context) => const CargandoScreen(),
+        '/Login': (context) => const VistaIdentificacionWidget(),
       },
-    ),
-    routes: {
-      '/generarOTP': (context) => const VistaOTPWidget(),
-      '/cod_ver': (context) => const Vista_cod_ver(),
-      '/pin': (context) => const VistaIdentificacionWidget1(),
-      '/SinConexion': (context) => const SinConexionScreen(),
-      '/Loading': (context) => const CargandoScreen(),
-      '/Login': (context) => const VistaIdentificacionWidget(),
-    },
-  );
-}
-
+    );
+  }
+                                                     
   static Future<String> getInitialRoute() async {
     DatabaseHelper databaseHelper = DatabaseHelper();
     await databaseHelper.database;
