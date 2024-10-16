@@ -38,7 +38,7 @@ class appController {
       Response response1  = Response(
         isSuccess: true,
         result: TokenResponse (
-          token : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMzQ0NTk3IiwianRpIjoiYjQ3MmE5NzUtNzZmMy00OThkLTk1YTYtMDk0NDdlMWFhZmQxIiwiZXhwIjoxNzI4OTM2NjA5LCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo0NDMyMS8iLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo0NDMyMS8ifQ.AfCUCLjE5zSqtQzFXIk-m31WWUPReXVRPTn_NBYi0zI",
+          token : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMzQ0NTk3IiwianRpIjoiMTE2MDM4ZDgtNTE1Mi00MmJlLWE0ZTgtZTIyODQ4ZmIzZWE1IiwiZXhwIjoxNzI5MDk0MjIwLCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo0NDMyMS8iLCJhdWQiOiJodHRwczovL2xvY2FsaG9zdDo0NDMyMS8ifQ.IofK21MuPYCOG6vm2m5fNteVHa_UKOvPv0Db4EMbnb8",
           idResponse : 1344597,
           email :"09******06",
           cliId: null,
@@ -102,7 +102,7 @@ class appController {
     
   }
 
-  Future<void> cellValidateAsync(String Pin_ingresado) async {
+  Future<bool> cellValidateAsync(String Pin_ingresado) async {
    
     DatabaseHelper databaseHelper = DatabaseHelper();
     await databaseHelper.database;
@@ -114,35 +114,33 @@ class appController {
     Response datosconecction = await _apiService.checkConnection();
     if ( datosconecction.isSuccess == true)
     {
-      TokenResponse loginResponse = jsonDecode(idEntry.value);
+      Map<String, dynamic> jsonMap = jsonDecode(idEntry.value);
+      TokenResponse loginResponse = TokenResponse.fromJson(jsonMap);
       PinEmailRequest request =PinEmailRequest(toCliPin:  Pin_ingresado,tokCliente: loginResponse.idResponse );
       Response response = await _apiService.validateEmailPin(url, "TokenRegistros", "/ValidateCode", "bearer", loginResponse.token.toString(), request);
       if (response.isSuccess==false){
-        
-        if (response.message == null || response.message?.isEmpty == true) {
-          // Código a ejecutar si el mensaje es nulo o está vacío
-        }
-      
+              
         int contador = await _apicontrollerdb.getNumIntentos();
         contador++;
         await  _apicontrollerdb.update_NUM_INTENTOS_Dbenty(contador.toString()) ;
         
         if (contador<3)
         {
-          //error      
-          //retur
+          return false;
         }
         else
         {
           BlockRequest blockRequest = BlockRequest(tokCliente: loginResponse.idResponse);
           await _apiService.blockUser(url, "TokenRegistros", "/Block", blockRequest);
-
+          return false;
         }
         
       }
-      TokenResponse validationResponse = response.result;
+      TokenResponse validationResponse = response.result as TokenResponse;
       await databaseHelper.updateDbenty(Dbenty(keys: 'TOKEN', value: jsonEncode(validationResponse)));
+      return true;
     }
+    return false;
       
   }
 

@@ -274,57 +274,6 @@ class _VistaIdentificacionWidgetState extends State<VistaIdentificacionWidget> {
                               child: const Text('Ingrese su identificación'),
                             ),
                             
-                            TextButton(
-  onPressed: () async {
-    // Verificar si existe un Dbenty con la clave "ID"
-    bool idExists = await checkIfIdExists();
-    bool idExistsCedula = await checkInfoCedula();
-    
-    if (!idExists) {
-      await _appdb.insertDbenty(Dbenty(keys: 'NUM_INTENTOS', value: '0'));
-      await _appdb.insertDbenty(Dbenty(keys: 'ID', value: '0'));
-      await _appdb.insertDbenty(Dbenty(keys: 'USER_ID', value: '0'));
-      await _appdb.insertDbenty(Dbenty(keys: 'TOKEN', value: '0'));
-    }
-    
-    String idValue = _textEditingController.text;
-
-    // Uso de la API de la mutualista para obtener datos
-    //_appController.loginAsync2(idValue);
-
-    // Mostrar un diálogo al terminar si es necesario
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Procesamiento completado"),
-          content: Text("La identificación ha sido procesada exitosamente."),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Cierra el diálogo
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => TestPage(),
-                  ),
-                );
-              },
-              child: Text("Cerrar"),
-            ),
-          ],
-        );
-      },
-    );
-  },
-  style: TextButton.styleFrom(
-    backgroundColor: Colors.grey[300],
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12),
-    ),
-  ),
-  child: const Text('Ingrese su identificación'),
-)
 
                           ],
                         ),

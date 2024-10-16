@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mutualistaauthenticator/Views/view_otp.dart';
 import 'package:pin_code_fields/pin_code_fields.dart'; // Importa el paquete necesario
+import 'package:mutualistaauthenticator/controller/appController.dart';
 
 void main() => runApp(const MyApp());
 
@@ -28,11 +29,12 @@ class Vista_cod_ver extends StatefulWidget {
 class _Vista_cod_verState extends State<Vista_cod_ver>
     with TickerProviderStateMixin {
   late FocusNode _focusNode;
-
+  TextEditingController _textEditingController = TextEditingController();
   @override
   void initState() {
     super.initState();
     _focusNode = FocusNode();
+    _textEditingController.dispose();
   }
 
   @override
@@ -43,6 +45,8 @@ class _Vista_cod_verState extends State<Vista_cod_ver>
 
   @override
   Widget build(BuildContext context) {
+    appController _appController = appController();
+    String _pinCode1 = '';
     return Scaffold(
       backgroundColor: const Color(0xFF222e7a),
       appBar: AppBar(
@@ -128,36 +132,87 @@ class _Vista_cod_verState extends State<Vista_cod_ver>
                                 inactiveFillColor: Colors.transparent,
                                 selectedFillColor: Colors.transparent,
                               ),
+                              keyboardType: TextInputType.number,
+                              onCompleted: (value) {
+                                // Almacenar el PIN completado en la variable pinCode1
+                                _pinCode1 = value;
+                              },
                             ),
                           ),
                           const SizedBox(height: 16),
                           TextButton(
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: const Text('Felicidades'),
-                                    content: const Text(
-                                      'Su aplicación se ha registrada correctamente.',
-                                    ),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                          Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    VistaOTPWidget()),
-                                          );
-                                        },
-                                        child: const Text('Aceptar'),
-                                      ),
-                                    ],
+                            onPressed: () async {
+                              String asd = _pinCode1;
+                              if (_pinCode1.length == 6) {
+                                bool asd1 = await _appController.cellValidateAsync(_pinCode1);
+                                if (asd1 == true) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text('Felicidades'),
+                                        content: const Text(
+                                          'Su aplicación se ha registrada correctamente...',
+                                        ),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                              Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        VistaOTPWidget()),
+                                              );
+                                            },
+                                            child: const Text('Aceptar'),
+                                          ),
+                                        ],
+                                      );
+                                    },
                                   );
-                                },
-                              );
+                                } else {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text('Error'),
+                                        content: const Text(
+                                          'El PIN que ingresaste no es correcto. Por favor, intenta nuevamente.',
+                                        ),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text('Aceptar'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text('Error'),
+                                      content: const Text(
+                                        'Ingrese Datos...',
+                                      ),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text('Aceptar'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
                             },
                             style: TextButton.styleFrom(
                               backgroundColor: Colors.grey[300],
