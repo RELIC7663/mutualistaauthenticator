@@ -32,6 +32,7 @@ class _TestPageState extends State<TestPage> {
         title: Text('Test Page'),
       ),
       body: SingleChildScrollView(
+        scrollDirection: Axis.horizontal, // Añadido para permitir el scroll horizontal en la tabla si es necesario
         child: DataTable(
           columns: const <DataColumn>[
             DataColumn(
@@ -50,21 +51,25 @@ class _TestPageState extends State<TestPage> {
                 DataCell(Text(db.keys)),
                 DataCell(Text(db.value)),
                 DataCell(
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.edit),
-                        onPressed: () {
-                          _editUser(db);
-                        },
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () {
-                          _deleteUser(db.keys);
-                        },
-                      ),
-                    ],
+                  Container(
+                    width: 100, // Establecer un ancho fijo para el contenedor de los botones
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Espacio entre los botones
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () {
+                            _editUser(db);
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.delete),
+                          onPressed: () {
+                            _deleteUser(db.keys);
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],

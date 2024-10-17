@@ -69,14 +69,18 @@ class MyApp extends StatelessWidget {
       orElse: () => Dbenty(keys: '', value: ''), // Si no se encuentra, crea un objeto vacío
     );
     
+     Response asd =await _app_services.checkConnection();
     
-    if (idEntry.value.length > 9 ) {
+    if (idEntry.value.length > 9 && asd.isSuccess==true) {
       
       if (pinEntry.value.length > 4) {
         return '/pin';
       } 
       return '/generarOTP';
-    }else {
+    } else if (asd.isSuccess==false) {
+      return '/SinConexion';
+    }
+    else {
       return '/Login';
     }
 

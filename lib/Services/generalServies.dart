@@ -15,29 +15,7 @@ class Generalservies {
   final Connectivity _connectivity = Connectivity();
   // Suponiendo que ya tienes las clases LoginRequest, Response, y TokenResponse creadas
 
-  Future<bool> hasInternetConnection() async {
-    // Verificar si está conectado a alguna red (Wi-Fi, datos móviles, etc.)
-    var connectivityResult = await (_connectivity.checkConnectivity());
-    
-    // Si no está conectado a ninguna red, devolver false
-    if (connectivityResult == ConnectivityResult.none) {
-      return false;
-    }
 
-    // Verificar si realmente puede acceder a Internet (por ejemplo, ping a Google)
-    try {
-      final result = await InternetAddress.lookup('google.com');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        return true;
-      }
-    } catch (e) {
-      return false;
-    }
-
-    return false;
-  }
-
-  
 
   Future<Response> checkConnection() async {
     try {

@@ -5,6 +5,7 @@ import 'package:mutualistaauthenticator/Views/view_conf_pin.dart';
 import 'package:mutualistaauthenticator/Views/view_info.dart';
 import 'package:mutualistaauthenticator/Views/test.dart';
 import 'package:mutualistaauthenticator/controller/database_helper.dart';
+import 'package:mutualistaauthenticator/controller/appController.dart';
 
 class VistaOTPWidget extends StatefulWidget {
   const VistaOTPWidget({Key? key}) : super(key: key);
@@ -17,6 +18,7 @@ class _VistaOTPWidgetState extends State<VistaOTPWidget>
     with TickerProviderStateMixin {
   late AnimationController _controller;
   final DatabaseHelper _apiDB = DatabaseHelper();
+  appController _apiController = appController();
   @override
   void initState() {
     super.initState();
@@ -177,6 +179,7 @@ class _VistaOTPWidgetState extends State<VistaOTPWidget>
                               // Cerrar la alerta
                               Navigator.of(context).pop();
                               
+                              _apiController.cerrarSesionAsync();
                               _apiDB.deleteAllEntries();
                               
 

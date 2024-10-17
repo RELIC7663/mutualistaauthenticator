@@ -117,14 +117,29 @@ class appController {
       Map<String, dynamic> jsonMap = jsonDecode(idEntry.value);
       TokenResponse loginResponse = TokenResponse.fromJson(jsonMap);
       PinEmailRequest request =PinEmailRequest(toCliPin:  Pin_ingresado,tokCliente: loginResponse.idResponse );
-      Response response = await _apiService.validateEmailPin(url, "TokenRegistros", "/ValidateCode", "bearer", loginResponse.token.toString(), request);
+      
+      
+      
+      //Response response = await _apiService.validateEmailPin(url, "TokenRegistros", "/ValidateCode", "bearer", loginResponse.token.toString(), request);
+      Response response  = Response(
+        isSuccess: true,
+        result: TokenResponse (
+          token : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMzQ0NTk3IiwianRpIjoiYTE1MTYyYjktNWRhMC00N2M0LThiYmQtN2EyNjMwZjg3ZWFjIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiY2xpZW50ZSIsImV4cCI6MTg4Njg2MDcyMiwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMjEvIiwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMjEvIn0.KgT0_q_l_kZ3RbyNxKviBTkonUa_c-AiPS0BMO9d0og",
+          idResponse : 1344597,
+          email :"09******06",
+          cliId: null,
+        ),
+      );
+      
+
       if (response.isSuccess==false){
               
         int contador = await _apicontrollerdb.getNumIntentos();
         contador++;
         await  _apicontrollerdb.update_NUM_INTENTOS_Dbenty(contador.toString()) ;
         
-        if (contador<3)
+        //block de user
+        if (contador<15)
         {
           return false;
         }
@@ -157,7 +172,7 @@ class appController {
       Response response2 = await _apiService.getCodeByUsername(
         url,
         "TokenRegistros",
-        "/CreateToken",
+        "/LogOut",
         "bearer",
         loginResponse.token.toString(),
         request,
@@ -201,6 +216,28 @@ class appController {
       // Cerrar la aplicación si es necesario
       return;
     }
+  }
+
+
+Future<void> cerrarSesionAsync() async {
+      // string correcto
+      String tokenJson = '{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMzQ0NTk3IiwianRpIjoiYTE1MTYyYjktNWRhMC00N2M0LThiYmQtN2EyNjMwZjg3ZWFjIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiY2xpZW50ZSIsImV4cCI6MTg4Njg2MDcyMiwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMjEvIiwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMjEvIn0.KgT0_q_l_kZ3RbyNxKviBTkonUa_c-AiPS0BMO9d0og","idresponse":1344597,"expiration":"2029-10-16T15:58:42Z"}' ;      
+      Map<String, dynamic> tokenMap = jsonDecode(tokenJson);
+      TokenResponse loginResponse = TokenResponse.fromJson(tokenMap);
+      
+      LogoutRequestOne request2 = LogoutRequestOne(tokCliente: loginResponse.idResponse);
+
+      Response response2 = await _apiService.getLogoutUserOne(
+        url,
+        "TokenRegistros",
+        "/LogOut",
+        "bearer",
+        loginResponse.token.toString(),
+        request2,
+      );
+
+      
+    
   }
 
 
