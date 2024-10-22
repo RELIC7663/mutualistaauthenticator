@@ -4,14 +4,18 @@ import 'package:mutualistaauthenticator/Model/dbenty.dart';
 import 'package:mutualistaauthenticator/controller/database_helper.dart';
 import 'package:pin_code_fields/pin_code_fields.dart'; // Importa el paquete necesario
 
-class CreatePinView extends StatelessWidget {
+class CreatePinView extends StatelessWidget  {
   CreatePinView({Key? key}) : super(key: key);
-
+  
   String _pinCode1 = '';
   String _pinCode2 = '';
+  bool mostrarImagen = false;
+  
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context)  {
+    
     return Scaffold(
+      
       backgroundColor: const Color(0xFF222e7a),
       appBar: AppBar(
         backgroundColor: const Color(0xFF112659),
@@ -34,18 +38,20 @@ class CreatePinView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              width: double.infinity,
-              height: 300, // Ajusta la altura según tus necesidades
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.asset(
-                  'assets/images/asd.png',
-                  fit: BoxFit
-                      .contain, // Ajusta el modo de ajuste según tus necesidades
+            
+            if (mostrarImagen)
+              Container(
+                width: double.infinity,
+                height: 300, // Ajusta la altura según tus necesidades
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.asset(
+                    'assets/images/asd.png',
+                    fit: BoxFit
+                        .contain, // Ajusta el modo de ajuste según tus necesidades
+                  ),
                 ),
               ),
-            ),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -191,7 +197,7 @@ class CreatePinView extends StatelessWidget {
                                   // Acción al presionar el botón de cancelar
                                   Navigator.of(context).pop();
                                 },
-                                child: const Text('Cancelar'),
+                                child: const Text('Canceltar'),
                               ),
                               TextButton(
                                 onPressed: () async {
@@ -204,7 +210,6 @@ class CreatePinView extends StatelessWidget {
                                   await updatePIN(_pinCode1);
                                   // Navegar a otra vista
                                   Navigator.pushReplacement(
-                                    
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
@@ -249,8 +254,8 @@ class CreatePinView extends StatelessWidget {
     await databaseHelper.database;
     await databaseHelper.insertDbenty(Dbenty(keys: 'PIN'));
   }
-  
-    Future<void> updatePIN(String pin) async {
+
+  Future<void> updatePIN(String pin) async {
     DatabaseHelper databaseHelper = DatabaseHelper();
     await databaseHelper.database;
     await databaseHelper.updateDbenty(Dbenty(keys: 'PIN', value: pin));
